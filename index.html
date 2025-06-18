@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Content Planner Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
+        }
+        main {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .step-indicator {
+            transition: all 0.3s ease;
+            background-color: #e2e8f0; 
+            color: #64748b; 
+        }
+        .step-indicator.active {
+            background-color: #3b82f6; 
+            color: white;
+            border-color: #3b82f6;
+            box-shadow: 0 4px 14px 0 rgb(59 130 246 / 39%);
+        }
+        .step-indicator.completed {
+            background-color: #22c55e;
+            color: white;
+            border-color: #22c55e;
+        }
+        .form-step { display: none; }
+        .form-step.active { display: block; }
+
+        .option-radio:checked + label,
+        .platform-checkbox:checked + label {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            border-width: 2px;
+        }
+        
+        .modal-content h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
+        .modal-content div > p { margin-bottom: 1rem; line-height: 1.6; }
+        .modal-content div > ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.6; }
+        .modal-content div > blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; margin-left: 0; font-style: italic; color: #475569; }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-6xl">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Perencana Konten AI</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Hasilkan ide konten sosial media yang siap pakai hanya dalam beberapa detik.</p>
+        </header>
+
+        <main id="main-content" class="p-6 md:p-10 rounded-2xl shadow-2xl shadow-slate-300/20">
+
+            <!-- Form Wizard -->
+            <div id="form-wizard">
+                <!-- Step Indicators -->
+                <div class="flex items-center justify-center mb-10 w-full max-w-2xl mx-auto">
+                    <div class="flex items-center text-center flex-col">
+                        <div id="step-indicator-1" class="step-indicator active w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-transparent text-lg">1</div>
+                        <span class="mt-2 text-sm font-semibold text-slate-600">Info Bisnis</span>
+                    </div>
+                    <div class="flex-1 border-t-2 border-slate-200 mx-4"></div>
+                    <div class="flex items-center text-center flex-col">
+                        <div id="step-indicator-2" class="step-indicator w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-transparent text-lg">2</div>
+                        <span class="mt-2 text-sm font-semibold text-slate-600">Gaya & Tujuan</span>
+                    </div>
+                    <div class="flex-1 border-t-2 border-slate-200 mx-4"></div>
+                    <div class="flex items-center text-center flex-col">
+                        <div id="step-indicator-3" class="step-indicator w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-transparent text-lg">3</div>
+                        <span class="mt-2 text-sm font-semibold text-slate-600">Platform & Jadwal</span>
+                    </div>
+                </div>
+
+                <!-- Step 1: Business Info -->
+                <div id="step-1" class="form-step active">
+                    <div class="max-w-xl mx-auto">
+                        <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Profil Bisnis & Audiens</h2>
+                        <p class="text-center text-slate-500 mb-8">Informasi fundamental ini membantu AI memahami untuk siapa konten ini dibuat.</p>
+                        <div class="space-y-5">
+                            <div><label for="business-name" class="block text-sm font-medium text-slate-700">Nama Bisnis/Brand</label><input type="text" id="business-name" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Kopi Senja"></div>
+                            <div><label for="industry" class="block text-sm font-medium text-slate-700">Industri/Bidang Usaha</label><input type="text" id="industry" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: F&B, Fashion, Agensi Digital"></div>
+                            <div><label for="description" class="block text-sm font-medium text-slate-700">Deskripsi Singkat Produk/Jasa</label><textarea id="description" rows="3" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Jelaskan profil usaha Anda. Sebutkan produk/jasa utama dan apa yang menjadi keunggulan khas Anda."></textarea></div>
+                            
+                            <div class="pt-5 border-t border-dashed border-slate-200">
+                                <p class="text-md font-semibold text-slate-800 mb-3 flex items-center"><i class="fas fa-users-viewfinder mr-2 text-slate-500"></i>Detail Target Audiens</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5">
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-slate-700">Rentang Usia</label>
+                                        <div class="grid grid-cols-2 gap-2 mt-1">
+                                            <input type="number" id="audience-age-from" class="block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Dari (Cth: 18)">
+                                            <input type="number" id="audience-age-to" class="block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Sampai (Cth: 35)">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="audience-gender" class="block text-sm font-medium text-slate-700">Jenis Kelamin</label>
+                                        <select id="audience-gender" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="Semua">Semua</option><option value="Pria">Pria</option><option value="Wanita">Wanita</option></select>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label for="audience-interests" class="block text-sm font-medium text-slate-700">Minat & Perilaku Audiens</label>
+                                        <textarea id="audience-interests" rows="2" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Cth: Mahasiswa yang suka nongkrong, ibu muda yang aktif..."></textarea>
+                                        <p class="mt-1.5 text-xs text-slate-500">Jelaskan siapa pelanggan Anda. Sebutkan hobi, pekerjaan, atau apa yang penting bagi mereka. Cth: Suka traveling, pekerja kantoran, peduli produk lokal.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Audience, Tone & Focus -->
+                <div id="step-2" class="form-step">
+                     <div class="max-w-xl mx-auto">
+                         <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Gaya & Tujuan Konten</h2>
+                         <p class="text-center text-slate-500 mb-8">Pilih gaya dan tujuan utama konten Anda.</p>
+                         <div class="space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-3">Apa Tujuan Utama Konten Anda?</label>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div><input type="radio" name="business-stage" id="stage-awareness" value="Kesadaran" class="hidden option-radio" checked><label for="stage-awareness" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-bullhorn text-2xl mb-2 text-purple-500"></i><span class="block text-sm font-semibold text-slate-700">Kesadaran</span><span class="text-xs text-slate-500">Jangkau audiens baru & perkenalkan brand</span></label></div>
+                                    <div><input type="radio" name="business-stage" id="stage-interaction" value="Interaksi" class="hidden option-radio"><label for="stage-interaction" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-comments text-2xl mb-2 text-sky-500"></i><span class="block text-sm font-semibold text-slate-700">Interaksi</span><span class="text-xs text-slate-500">Bangun interaksi & kepercayaan</span></label></div>
+                                    <div><input type="radio" name="business-stage" id="stage-loyalty" value="Loyalitas" class="hidden option-radio"><label for="stage-loyalty" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-crown text-2xl mb-2 text-amber-500"></i><span class="block text-sm font-semibold text-slate-700">Loyalitas</span><span class="text-xs text-slate-500">Pertahankan pelanggan & bangun komunitas</span></label></div>
+                                </div>
+                            </div>
+                             
+                             <div>
+                                 <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Pembawaan Suasana Konten</label>
+                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                     <div><input type="radio" name="content-mood" id="mood-informative" value="Informatif dan Edukatif" class="hidden option-radio" checked><label for="mood-informative" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-graduation-cap text-2xl mb-2 text-blue-500"></i><span class="block text-sm font-semibold text-slate-700">Informatif</span></label></div>
+                                     <div><input type="radio" name="content-mood" id="mood-casual" value="Santai dan Humoris" class="hidden option-radio"><label for="mood-casual" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-smile-beam text-2xl mb-2 text-yellow-500"></i><span class="block text-sm font-semibold text-slate-700">Santai</span></label></div>
+                                     <div><input type="radio" name="content-mood" id="mood-professional" value="Profesional dan Formal" class="hidden option-radio"><label for="mood-professional" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-briefcase text-2xl mb-2 text-slate-700"></i><span class="block text-sm font-semibold text-slate-700">Profesional</span></label></div>
+                                     <div><input type="radio" name="content-mood" id="mood-inspirational" value="Inspiratif dan Motivasi" class="hidden option-radio"><label for="mood-inspirational" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-lightbulb text-2xl mb-2 text-orange-500"></i><span class="block text-sm font-semibold text-slate-700">Inspiratif</span></label></div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- Step 3: Platform & Scheduling -->
+                <div id="step-3" class="form-step">
+                     <div class="max-w-2xl mx-auto">
+                         <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Platform & Penjadwalan</h2>
+                         <p class="text-center text-slate-500 mb-8">Pilih platform, jadwal, dan fokus khusus konten Anda.</p>
+                         <div class="space-y-6">
+                             <div>
+                                 <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Platform Sosial Media</label>
+                                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                     <div><input type="checkbox" id="platform-instagram" value="Instagram" class="hidden platform-checkbox" checked><label for="platform-instagram" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-instagram text-3xl mb-2 text-pink-500"></i><span class="block text-sm font-semibold text-slate-700">Instagram</span></label></div>
+                                     <div><input type="checkbox" id="platform-tiktok" value="TikTok" class="hidden platform-checkbox" checked><label for="platform-tiktok" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-tiktok text-3xl mb-2 text-black"></i><span class="block text-sm font-semibold text-slate-700">TikTok</span></label></div>
+                                     <div><input type="checkbox" id="platform-facebook" value="Facebook" class="hidden platform-checkbox"><label for="platform-facebook" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-facebook text-3xl mb-2 text-blue-600"></i><span class="block text-sm font-semibold text-slate-700">Facebook</span></label></div>
+                                 </div>
+                             </div>
+                            <div id="plan-details-container" class="space-y-6">
+                                <div>
+                                    <label for="start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai Rencana</label>
+                                    <input type="date" id="start-date" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div id="duration-container">
+                                    <label for="duration" class="block text-sm font-medium text-slate-700">Durasi Rencana Konten</label>
+                                    <select id="duration" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="7">1 Minggu</option>
+                                        <option value="14">2 Minggu</option>
+                                        <option value="30" selected>1 Bulan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="pt-6 border-t border-dashed border-slate-200">
+                                <label class="flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" id="product-focus-toggle" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                    <span class="text-sm font-medium text-slate-700">Fokus pada Produk Unggulan? (Opsional)</span>
+                                </label>
+                                <div id="product-focus-fields" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-lg">
+                                    <div><label for="product-focus-input" class="block text-sm font-medium text-slate-700">Nama Produk/Layanan</label><input type="text" id="product-focus-input" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Es Kopi Pandan Gula Aren"></div>
+                                    <div><label for="product-description" class="block text-sm font-medium text-slate-700">Deskripsi Singkat Produk</label><textarea id="product-description" rows="2" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Minuman kopi dingin dengan rasa manis dan wangi pandan alami."></textarea></div>
+                                </div>
+                            </div>
+                             <div class="pt-6 border-t border-dashed border-slate-200">
+                                <h3 class="text-lg font-semibold text-center text-slate-800">Detail Promosi (Opsional)</h3>
+                                <p class="text-center text-slate-500 mb-4 text-sm">Isi jika ada promosi yang sedang berjalan.</p>
+                                <div class="space-y-4">
+                                    <div><label for="promotion-details" class="block text-sm font-medium text-slate-700">Jelaskan Promosi Anda</label><textarea id="promotion-details" rows="2" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Diskon 20% untuk semua minuman, Beli 1 Gratis 1"></textarea></div>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div><label for="promotion-start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai</label><input type="date" id="promotion-start-date" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
+                                        <div><label for="promotion-end-date" class="block text-sm font-medium text-slate-700">Tanggal Berakhir</label><input type="date" id="promotion-end-date" class="mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
+                                    </div>
+                                </div>
+                           </div>
+                         </div>
+                     </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="mt-10 pt-5 border-t border-slate-200 flex justify-between items-center max-w-xl mx-auto">
+                    <button id="prev-btn" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
+                    <button id="next-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">Lanjutkan</button>
+                    <button id="generate-btn" class="bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition-colors hidden text-lg"><i class="fas fa-magic mr-2"></i>Buat Rencana!</button>
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="text-center py-16 hidden"><i class="fas fa-spinner fa-spin text-5xl text-blue-500"></i><p class="mt-4 text-xl font-semibold text-slate-800">AI sedang meracik rencana konten Anda...</p><p class="text-slate-500">Mohon tunggu, ini bisa memakan waktu hingga 1 menit.</p></div>
+
+            <!-- Results -->
+            <div id="results" class="hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+                    <div><h2 id="results-title" class="text-3xl font-bold text-slate-900">Rencana Konten Anda</h2><p id="results-subtitle" class="text-slate-600">Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.</p></div>
+                    <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
+                        <button id="export-btn" class="bg-blue-100 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200 transition-colors"><i class="fas fa-download mr-2"></i>Ekspor CSV</button>
+                        <button id="restart-btn" class="bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors"><i class="fas fa-redo mr-2"></i>Buat Lagi</button>
+                    </div>
+                </div>
+                <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+        </main>
+        
+        <!-- MODALS -->
+        <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center">
+                <div class="text-red-500 mx-auto w-16 h-16 flex items-center justify-center bg-red-100 rounded-full">
+                    <i class="fas fa-times fa-3x"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-slate-900 mt-6">Oops, Terjadi Kesalahan</h3>
+                <p id="error-message" class="text-slate-600 mt-2">Maaf, kami tidak dapat memproses permintaan Anda saat ini. Silakan coba beberapa saat lagi.</p>
+                <button id="close-error-modal" class="mt-6 bg-red-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-600 transition-colors w-full">Tutup</button>
+            </div>
+        </div>
+        
+        <div id="caption-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-40">
+            <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col modal-content-bg">
+                <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-slate-800"><i class="fas fa-robot mr-2 text-blue-500"></i>Hasil AI</h3>
+                    <button id="close-caption-modal" class="text-slate-500 hover:text-slate-800"><i class="fas fa-times fa-lg"></i></button>
+                </div>
+                <div class="p-6 overflow-y-auto">
+                    <div id="caption-loading" class="text-center py-10"><i class="fas fa-spinner fa-spin text-3xl text-blue-500"></i><p class="mt-3 font-semibold text-slate-700">AI sedang bekerja...</p></div>
+                    <div id="caption-content" class="text-slate-700 hidden space-y-6 modal-content"></div>
+                </div>
+                 <div class="p-4 bg-slate-50 border-t border-slate-200">
+                    <button id="copy-caption-btn" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"><i class="fas fa-copy mr-2"></i>Salin Teks</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentStep = 1;
+            const totalSteps = 3;
+            let generatedData = [];
+            let currentInputs = {};
+
+            const getEl = (id) => document.getElementById(id);
+
+            // --- LOCALSTORAGE LOGIC ---
+            const fieldsToSave = ['business-name', 'industry', 'description', 'audience-age-from', 'audience-age-to', 'audience-gender', 'audience-interests', 'promotion-details'];
+
+            const saveToLocalStorage = (e) => {
+                localStorage.setItem(`smp_${e.target.id}`, e.target.value);
+            };
+
+            const loadFromLocalStorage = () => {
+                fieldsToSave.forEach(id => {
+                    const element = getEl(id);
+                    if (element) {
+                        const savedValue = localStorage.getItem(`smp_${id}`);
+                        if (savedValue) {
+                            element.value = savedValue;
+                        }
+                    }
+                });
+            };
+            
+            fieldsToSave.forEach(id => {
+                 const element = getEl(id);
+                 if (element) {
+                    element.addEventListener('keyup', saveToLocalStorage);
+                    element.addEventListener('change', saveToLocalStorage);
+                 }
+            });
+            // --------------------------
+
+            // Main views
+            const formWizard = getEl('form-wizard');
+            const loadingEl = getEl('loading');
+            const resultsEl = getEl('results');
+            const resultsGrid = getEl('results-grid');
+            const resultsTitle = getEl('results-title');
+            const resultsSubtitle = getEl('results-subtitle');
+
+            // Wizard buttons
+            const prevBtn = getEl('prev-btn');
+            const nextBtn = getEl('next-btn');
+            const generateBtn = getEl('generate-btn');
+            
+            // Results buttons
+            const exportBtn = getEl('export-btn');
+            const restartBtn = getEl('restart-btn');
+
+            // Modals
+            const errorModal = getEl('error-modal');
+            const errorMessage = getEl('error-message');
+            const closeErrorModalBtn = getEl('close-error-modal');
+            const captionModal = getEl('caption-modal');
+            const closeCaptionModalBtn = getEl('close-caption-modal');
+            const captionLoading = getEl('caption-loading');
+            const captionContent = getEl('caption-content');
+            const copyCaptionBtn = getEl('copy-caption-btn');
+            
+            // Product Focus elements
+            const productFocusToggle = getEl('product-focus-toggle');
+            const productFocusFields = getEl('product-focus-fields');
+            const planDetailsContainer = getEl('plan-details-container');
+            
+            const updateButtons = () => {
+                prevBtn.disabled = currentStep === 1;
+                if (currentStep === totalSteps) {
+                    nextBtn.classList.add('hidden');
+                    generateBtn.classList.remove('hidden');
+                } else {
+                    nextBtn.classList.remove('hidden');
+                    generateBtn.classList.add('hidden');
+                }
+            };
+
+            const updateStepIndicators = () => {
+                for (let i = 1; i <= totalSteps; i++) {
+                    const indicator = getEl(`step-indicator-${i}`);
+                    indicator.classList.remove('active', 'completed');
+                    if (i < currentStep) {
+                        indicator.classList.add('completed');
+                    } else if (i === currentStep) {
+                        indicator.classList.add('active');
+                    }
+                }
+            };
+
+            const showStep = (step) => {
+                document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+                getEl(`step-${step}`).classList.add('active');
+                updateButtons();
+                updateStepIndicators();
+            };
+
+            nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; showStep(currentStep); } });
+            prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; showStep(currentStep); } });
+
+            const showLoading = () => {
+                formWizard.classList.add('hidden');
+                loadingEl.classList.remove('hidden');
+            };
+
+            const hideLoading = () => {
+                loadingEl.classList.add('hidden');
+            };
+
+            generateBtn.addEventListener('click', async () => {
+                showLoading();
+                try {
+                    currentInputs = getFormInputs();
+                    const prompt = buildPlannerPrompt(currentInputs);
+                    const result = await callGemini(prompt, true);
+                    generatedData = result.plan || [];
+                    
+                    const businessName = getEl('business-name').value;
+                    resultsTitle.textContent = currentInputs.isProductFocus ? `Ide Fokus untuk "${currentInputs.productName}"` : `Rencana Konten untuk "${businessName}"`;
+                    resultsSubtitle.textContent = currentInputs.isProductFocus ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
+                    
+                    renderResults(generatedData, resultsGrid);
+                } catch (error) {
+                    console.error('Error generating content:', error);
+                    showErrorModal(error.message);
+                    resetToForm();
+                } finally {
+                    hideLoading();
+                }
+            });
+            
+            const callGemini = async (prompt, isJson = false) => {
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                
+                if (isJson) {
+                    payload.generationConfig = {
+                        responseMimeType: "application/json",
+                        responseSchema: { type: "OBJECT", properties: { plan: { type: "ARRAY", items: { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] } } } }
+                    };
+                }
+
+                const apiKey = "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorBody = await response.text();
+                    throw new Error(`API error: ${response.status} ${response.statusText}. Body: ${errorBody}`);
+                }
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
+                      const text = result.candidates[0].content.parts[0].text;
+                      return isJson ? JSON.parse(text) : text;
+                }
+                throw new Error("Struktur respons dari AI tidak valid atau kosong.");
+            };
+
+            const getFormInputs = () => {
+                const isProductFocus = productFocusToggle.checked;
+                
+                const platforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
+                const contentMood = document.querySelector('input[name="content-mood"]:checked');
+                const businessStage = document.querySelector('input[name="business-stage"]:checked');
+
+                const audience = {
+                    age_from: getEl('audience-age-from').value,
+                    age_to: getEl('audience-age-to').value,
+                    gender: getEl('audience-gender').value,
+                    interests: getEl('audience-interests').value
+                };
+
+                if (isProductFocus) {
+                    return {
+                        isProductFocus: true,
+                        productName: getEl('product-focus-input').value,
+                        productDescription: getEl('product-description').value,
+                        audience: audience,
+                        contentMood: contentMood ? contentMood.value : "Informatif dan Edukatif",
+                        businessStage: businessStage ? businessStage.value : "Kesadaran",
+                        platforms: platforms.join(', '),
+                    };
+                }
+                
+                return {
+                    isProductFocus: false,
+                    businessName: getEl('business-name').value,
+                    industry: getEl('industry').value,
+                    description: getEl('description').value,
+                    audience: audience,
+                    platforms: platforms.join(', '),
+                    startDate: getEl('start-date').value,
+                    duration: getEl('duration').value,
+                    contentMood: contentMood ? contentMood.value : "Informatif dan Edukatif",
+                    businessStage: businessStage ? businessStage.value : "Kesadaran",
+                    promoDetails: getEl('promotion-details').value,
+                    promoStart: getEl('promotion-start-date').value,
+                    promoEnd: getEl('promotion-end-date').value,
+                };
+            };
+            
+            const buildPlannerPrompt = (inputs) => {
+                const audienceDescription = `Usia dari ${inputs.audience.age_from || 'tidak spesifik'} sampai ${inputs.audience.age_to || 'tidak spesifik'}, Jenis Kelamin ${inputs.audience.gender || 'semua'}, dengan minat pada ${inputs.audience.interests || 'tidak spesifik'}.`;
+
+                let stageInstruction = '';
+                switch (inputs.businessStage) {
+                    case "Kesadaran":
+                        stageInstruction = "Fokus utama adalah menjangkau audiens baru dan membangun brand awareness. Buat konten yang memperkenalkan brand, menjelaskan masalah yang produk Anda selesaikan, dan konten edukatif atau hiburan yang ringan untuk menarik perhatian. Gunakan CTA seperti 'Follow Kami untuk Info Lebih Lanjut' atau 'Simpan Postingan Ini'.";
+                        break;
+                    case "Interaksi":
+                        stageInstruction = "Fokus utama adalah membangun interaksi dan kepercayaan dengan audiens yang sudah mengenal Anda. Buat konten yang menampilkan testimoni, studi kasus, perbandingan produk, dan ajak audiens berdiskusi (Q&A, polling). Gunakan CTA yang lebih kuat untuk mendorong evaluasi, seperti 'Kunjungi Website Kami' atau 'Lihat Detail Produk'.";
+                        break;
+                    case "Loyalitas":
+                        stageInstruction = "Fokus utama adalah mengubah pelanggan menjadi penggemar setia dan membangun komunitas. Buat konten di balik layar (behind the scenes), tonjolkan user-generated content (UGC), umumkan program loyalitas, dan perkuat posisi sebagai ahli di industri. Gunakan CTA untuk memperkuat komunitas, seperti 'Gabung Grup Eksklusif Kami' atau 'Bagikan Pengalamanmu!'.";
+                        break;
+                }
+
+                if (inputs.isProductFocus) {
+                    return `Buat 5 ide konten yang berbeda dan kreatif untuk mempromosikan satu produk spesifik: "${inputs.productName}".
+                    Deskripsi produk: "${inputs.productDescription}".
+                    Target audiens: "${audienceDescription}".
+                    Pembawaan suasana: "${inputs.contentMood}".
+                    Platform: "${inputs.platforms}".
+                    Tujuan Konten: "${inputs.businessStage}".
+                    INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
+                    Berikan ide dari berbagai sudut pandang (edukasi, testimoni, promosi, interaksi, dll) yang sesuai dengan tujuan konten tersebut. Hasilkan dalam format JSON dengan skema 'plan', gunakan "Ide 1", "Ide 2", dst. untuk field 'day'.`;
+                }
+
+                let focusInstruction = '';
+                if (inputs.promoDetails && inputs.promoStart && inputs.promoEnd) {
+                    focusInstruction = `Ada promosi khusus yang sedang berjalan: "${inputs.promoDetails}" dari tanggal ${inputs.promoStart} hingga ${inputs.promoEnd}. Prioritaskan beberapa ide konten untuk promosi ini.`;
+                } else {
+                    focusInstruction = "Berikan kombinasi pilar konten yang seimbang (Edukasi, Promosi, Hiburan, Interaksi) yang sesuai dengan tujuan konten.";
+                }
+                
+                const moodInstruction = `Gunakan pembawaan suasana yang ${inputs.contentMood} dalam semua ide dan draf caption.`;
+                const startDateInstruction = inputs.startDate ? `Mulai rencana pada tanggal ${inputs.startDate}.` : '';
+
+                return `Anda adalah ahli strategi sosial media. Buat rencana konten untuk ${inputs.duration} hari untuk bisnis: Nama: "${inputs.businessName}", Industri: "${inputs.industry}", Deskripsi: "${inputs.description}", Audiens: "${audienceDescription}", Platform: "${inputs.platforms}". 
+                INSTRUKSI UTAMA: Rencana harus disesuaikan untuk mencapai tujuan **${inputs.businessStage}**.
+                INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
+                INSTRUKSI TANGGAL: ${startDateInstruction} Gunakan tanggal kalender aktual (misalnya, '18 Juni 2025') untuk field 'day' dalam JSON, bukan 'Hari 1'.
+                INSTRUKSI FOKUS: ${focusInstruction}
+                INSTRUKSI SUASANA: ${moodInstruction}
+                Fokus pada 3 pilar utama untuk setiap ide: Ide, Caption, dan Visual. Berikan juga kategori (pillar) dan hashtags. Hasilkan dalam format JSON sesuai skema.`;
+            }
+
+            const renderResults = (data, container) => {
+                container.innerHTML = '';
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<p class="col-span-full text-center">AI tidak dapat menghasilkan rencana. Coba dengan input yang lebih spesifik.</p>`;
+                    return;
+                }
+                data.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl p-5 flex flex-col h-full shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 transition-shadow duration-300 border border-slate-200';
+                    const platformIcon = getPlatformIcon(item.platform);
+                    card.innerHTML = `
+                        <div class="flex-grow space-y-4">
+                            <div class="flex justify-between items-start">
+                                <span class="text-sm font-bold uppercase text-slate-500 tracking-wider">${item.day}</span>
+                                <span class="text-2xl">${platformIcon}</span>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-600 mb-1 tracking-wide">IDE</h3>
+                                <p class="text-md font-semibold text-slate-800">${item.idea || 'N/A'}</p>
+                                <span class="mt-2 inline-block bg-slate-100 text-slate-600 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">${item.pillar || 'General'}</span>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-600 mb-1 tracking-wide">CAPTION</h3>
+                                <p class="text-sm text-slate-600">${item.caption_brief || 'N/A'}</p>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-600 mb-1 tracking-wide">VISUAL</h3>
+                                <p class="text-sm text-slate-600">${item.visual_idea || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <button class="get-ai-result-btn mt-6 w-full bg-blue-50 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm"><i class="fas fa-robot mr-2"></i>Hasil AI</button>
+                    `;
+                    card.querySelector('.get-ai-result-btn').addEventListener('click', () => handleDevelopCaption(item));
+                    container.appendChild(card);
+                });
+                resultsEl.classList.remove('hidden');
+            };
+            
+            const getPlatformIcon = (platform) => {
+                const p = (platform || "").toLowerCase();
+                if (p.includes('instagram')) return '<i class="fab fa-instagram text-pink-500"></i>';
+                if (p.includes('tiktok')) return '<i class="fab fa-tiktok"></i>';
+                if (p.includes('facebook')) return '<i class="fab fa-facebook text-blue-600"></i>';
+                return '<i class="fas fa-bullhorn"></i>';
+            };
+            
+            const handleDevelopCaption = async (item) => {
+                captionModal.classList.remove('hidden');
+                captionContent.innerHTML = '';
+                captionContent.classList.add('hidden');
+                captionLoading.classList.remove('hidden');
+                try {
+                    const prompt = buildCaptionPrompt(item);
+                    const resultText = await callGemini(prompt, false);
+                    captionContent.innerHTML = formatToHtml(resultText);
+                } catch (error) {
+                    captionContent.innerHTML = `<p class="text-red-500">Gagal mengembangkan ide: ${error.message}</p>`;
+                } finally {
+                    captionLoading.classList.add('hidden');
+                    captionContent.classList.remove('hidden');
+                }
+            };
+            
+             const formatToHtml = (text) => {
+                 return text
+                     .replace(/### (.*?)\n/g, '<h4>$1</h4>')
+                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                     .replace(/\* (.*)/g, '<li>$1</li>')
+                     .replace(/(<\/li>)\s*?(<li>)/g, '$1$2')
+                     .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+                     .replace(/```([^`]+)```/gs, '<blockquote>$1</blockquote>')
+                     .replace(/\n/g, '<br>')
+                     .replace(/<br><ul>/g, '<ul>')
+                     .replace(/<\/ul><br>/g, '</ul>');
+             };
+
+            const buildCaptionPrompt = (item) => {
+                const promptStructure = `
+### CONTOH CAPTION LENGKAP
+{Tulis caption lengkap di sini}
+
+### SARAN VISUAL / SKRIP VIDEO
+{Tulis detail visual atau skrip video di sini}`;
+                return `Anda adalah seorang copywriter sosial media ahli. Kembangkan draf konten berikut menjadi aset siap pakai untuk bisnis "${currentInputs.businessName}" (tujuan: ${currentInputs.businessStage}) dengan pembawaan suasana **${currentInputs.contentMood}**.
+                DETAIL IDE: Platform: ${item.platform}, Ide: ${item.idea}, Draf Caption: ${item.caption_brief}, Draf Visual: ${item.visual_idea}
+                TUGAS ANDA: Buat konten detail berdasarkan ide di atas. Balas HANYA dalam format Markdown yang telah ditentukan di bawah. JANGAN tambahkan teks lain.
+                ${promptStructure}`;
+            };
+            
+            closeCaptionModalBtn.addEventListener('click', () => captionModal.classList.add('hidden'));
+
+            copyCaptionBtn.addEventListener('click', () => {
+                const textToCopy = captionContent.innerText;
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                textArea.style.position = "fixed"; textArea.style.top = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    copyCaptionBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersalin!';
+                } catch (err) {
+                    console.error('Gagal menyalin teks', err);
+                    copyCaptionBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Gagal!';
+                }
+                document.body.removeChild(textArea);
+                setTimeout(() => { copyCaptionBtn.innerHTML = '<i class="fas fa-copy mr-2"></i>Salin Teks'; }, 2000);
+            });
+
+            const showErrorModal = (message) => {
+                errorMessage.textContent = `Maaf, terjadi masalah: ${message}. Silakan periksa koneksi Anda dan coba lagi.`;
+                errorModal.classList.remove('hidden');
+            };
+            closeErrorModalBtn.addEventListener('click', () => errorModal.classList.add('hidden'));
+
+            const resetToForm = () => {
+                loadingEl.classList.add('hidden');
+                resultsEl.classList.add('hidden');
+                formWizard.classList.remove('hidden');
+            };
+
+            restartBtn.addEventListener('click', () => {
+                window.location.reload();
+            });
+
+            exportBtn.addEventListener('click', () => {
+                if (generatedData.length === 0) return;
+                const headerMapping = { day: "Hari/Tanggal", platform: "Platform", pillar: "Pilar Konten", idea: "Ide Pokok", caption_brief: "Draf Caption", visual_idea: "Saran Visual", hashtags: "Saran Hashtag" };
+                const headerKeys = Object.keys(headerMapping);
+                const headerTitles = Object.values(headerMapping);
+                const csvRows = [headerTitles.join(',')];
+                generatedData.forEach(row => {
+                    const values = headerKeys.map(key => `"${(row[key] || '').replace(/"/g, '""')}"`);
+                    csvRows.push(values.join(','));
+                });
+                const csvString = "\uFEFF" + csvRows.join('\n');
+                const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'rencana_konten_ai.csv';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+            
+            // --- NEW FEATURES ---
+            // Toggle Product Focus Fields
+            productFocusToggle.addEventListener('change', () => {
+                const isChecked = productFocusToggle.checked;
+                productFocusFields.classList.toggle('hidden', !isChecked);
+                planDetailsContainer.classList.toggle('hidden', isChecked);
+            });
+            
+            const setDefaultDate = () => {
+                const startDateInput = getEl('start-date');
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                startDateInput.value = `${year}-${month}-${day}`;
+                startDateInput.min = `${year}-${month}-${day}`;
+            };
+
+
+            // Initial Load
+            loadFromLocalStorage();
+            setDefaultDate();
+            showStep(1);
+        });
+    </script>
+</body>
+</html>
