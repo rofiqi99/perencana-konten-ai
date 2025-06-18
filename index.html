@@ -50,6 +50,8 @@
         .modal-content div > p { margin-bottom: 1rem; line-height: 1.6; }
         .modal-content div > ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.6; }
         .modal-content div > blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; margin-left: 0; font-style: italic; color: #475569; }
+        
+        #api-key-section { transition: all 0.5s ease-in-out; }
     </style>
 </head>
 <body class="text-slate-700">
@@ -201,9 +203,16 @@
 
                 <!-- Navigation Buttons -->
                 <div class="mt-10 pt-5 border-t border-slate-200 flex justify-between items-center max-w-xl mx-auto">
-                    <button id="prev-btn" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
-                    <button id="next-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">Lanjutkan</button>
-                    <button id="generate-btn" class="bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition-colors hidden text-lg"><i class="fas fa-magic mr-2"></i>Buat Rencana!</button>
+                    <div class="flex items-center gap-2">
+                        <button id="prev-btn" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
+                        <button id="reset-btn" title="Reset Formulir" class="text-slate-500 h-10 w-10 flex items-center justify-center rounded-full hover:bg-slate-200 transition-colors">
+                            <i class="fas fa-rotate-right text-lg"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button id="next-btn" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition-colors">Lanjutkan</button>
+                        <button id="generate-btn" class="bg-green-500 text-white font-bold py-2 px-6 text-base md:py-3 md:px-8 md:text-lg rounded-lg hover:bg-green-600 transition-colors hidden"><i class="fas fa-magic mr-2"></i>Buat Rencana!</button>
+                    </div>
                 </div>
             </div>
 
@@ -216,7 +225,7 @@
                     <div><h2 id="results-title" class="text-3xl font-bold text-slate-900">Rencana Konten Anda</h2><p id="results-subtitle" class="text-slate-600">Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.</p></div>
                     <div class="mt-4 md:mt-0 flex flex-wrap gap-2">
                         <button id="export-btn" class="bg-blue-100 text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-blue-200 transition-colors"><i class="fas fa-download mr-2"></i>Ekspor CSV</button>
-                        <button id="restart-btn" class="bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors"><i class="fas fa-redo mr-2"></i>Buat Lagi</button>
+                        <button id="restart-btn" class="bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-700 transition-colors"><i class="fas fa-redo mr-2"></i>Buat Rencana Baru</button>
                     </div>
                 </div>
                 <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -224,6 +233,30 @@
         </main>
         
         <!-- MODALS -->
+        <!-- API Key Modal -->
+        <div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-50">
+            <div class="bg-white rounded-xl shadow-2xl p-8 max-w-md w-full">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="w-12 h-12 flex-shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
+                         <i class="fas fa-key text-blue-500 text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-800 text-lg">Masukkan Kunci Aktivasi AI</h3>
+                        <p class="text-slate-600 text-sm">Untuk melanjutkan, Anda memerlukan API Key dari Google AI Studio.</p>
+                    </div>
+                </div>
+                <div>
+                    <label for="api-key-modal-input" class="block text-sm font-medium text-slate-700 mb-1">API Key Anda</label>
+                    <input type="password" id="api-key-modal-input" placeholder="Tempel kunci Anda di sini" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block mt-2 text-xs text-blue-600 hover:underline">Belum punya? Dapatkan gratis di sini <i class="fas fa-external-link-alt ml-1"></i></a>
+                </div>
+                <div class="flex gap-3 mt-6">
+                     <button id="close-api-key-modal-btn" class="w-full bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">Nanti Saja</button>
+                     <button id="save-api-key-modal-btn" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">Simpan & Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+
         <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center">
                 <div class="text-red-500 mx-auto w-16 h-16 flex items-center justify-center bg-red-100 rounded-full">
@@ -261,6 +294,12 @@
             let currentInputs = {};
 
             const getEl = (id) => document.getElementById(id);
+
+            // API Key Modal Elements
+            const apiKeyModal = getEl('api-key-modal');
+            const apiKeyModalInput = getEl('api-key-modal-input');
+            const saveApiKeyModalBtn = getEl('save-api-key-modal-btn');
+            const closeApiKeyModalBtn = getEl('close-api-key-modal-btn');
 
             // --- LOCALSTORAGE LOGIC ---
             const fieldsToSave = ['business-name', 'industry', 'description', 'audience-age-from', 'audience-age-to', 'audience-gender', 'audience-interests', 'promotion-details'];
@@ -302,12 +341,13 @@
             const prevBtn = getEl('prev-btn');
             const nextBtn = getEl('next-btn');
             const generateBtn = getEl('generate-btn');
+            const resetBtn = getEl('reset-btn'); 
             
             // Results buttons
             const exportBtn = getEl('export-btn');
             const restartBtn = getEl('restart-btn');
 
-            // Modals
+            // General Modals
             const errorModal = getEl('error-modal');
             const errorMessage = getEl('error-message');
             const closeErrorModalBtn = getEl('close-error-modal');
@@ -322,6 +362,7 @@
             const productFocusFields = getEl('product-focus-fields');
             const planDetailsContainer = getEl('plan-details-container');
             
+            // --- UI LOGIC ---
             const updateButtons = () => {
                 prevBtn.disabled = currentStep === 1;
                 if (currentStep === totalSteps) {
@@ -358,18 +399,20 @@
             const showLoading = () => {
                 formWizard.classList.add('hidden');
                 loadingEl.classList.remove('hidden');
+                resultsEl.classList.add('hidden');
             };
 
             const hideLoading = () => {
                 loadingEl.classList.add('hidden');
             };
-
-            generateBtn.addEventListener('click', async () => {
+            
+            // --- Core Application Logic ---
+            const generatePlan = async (apiKey) => {
                 showLoading();
                 try {
                     currentInputs = getFormInputs();
                     const prompt = buildPlannerPrompt(currentInputs);
-                    const result = await callGemini(prompt, true);
+                    const result = await callGemini(prompt, true, apiKey);
                     generatedData = result.plan || [];
                     
                     const businessName = getEl('business-name').value;
@@ -377,16 +420,68 @@
                     resultsSubtitle.textContent = currentInputs.isProductFocus ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
                     
                     renderResults(generatedData, resultsGrid);
+                    resultsEl.classList.remove('hidden');
+                    formWizard.classList.add('hidden');
                 } catch (error) {
                     console.error('Error generating content:', error);
                     showErrorModal(error.message);
-                    resetToForm();
+                    resetToFormView();
                 } finally {
                     hideLoading();
                 }
+            };
+
+            generateBtn.addEventListener('click', async () => {
+                const userApiKey = localStorage.getItem('geminiApiKey');
+                if (userApiKey) {
+                    generatePlan(userApiKey);
+                } else {
+                    apiKeyModal.classList.remove('hidden');
+                }
+            });
+
+            saveApiKeyModalBtn.addEventListener('click', () => {
+                const inputKey = apiKeyModalInput.value.trim();
+                if (!inputKey) {
+                    showErrorModal("Mohon masukkan API Key Anda.");
+                    return;
+                }
+                localStorage.setItem('geminiApiKey', inputKey);
+                apiKeyModal.classList.add('hidden');
+                generatePlan(inputKey);
             });
             
-            const callGemini = async (prompt, isJson = false) => {
+            closeApiKeyModalBtn.addEventListener('click', () => {
+                apiKeyModal.classList.add('hidden');
+            });
+
+
+            const resetForm = () => {
+                const form = formWizard;
+                form.querySelectorAll('input[type="text"], input[type="number"], textarea, input[type="date"]').forEach(input => input.value = '');
+                form.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+                form.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = (checkbox.id === 'platform-instagram' || checkbox.id === 'platform-tiktok');
+                });
+                productFocusToggle.checked = false;
+                productFocusFields.classList.add('hidden');
+                planDetailsContainer.classList.remove('hidden');
+                form.querySelectorAll('input[type="radio"]').forEach(radio => {
+                    radio.checked = (radio.id === 'stage-awareness' || radio.id === 'mood-informative');
+                });
+                fieldsToSave.forEach(id => localStorage.removeItem(`smp_${id}`));
+                setDefaultDate();
+                currentStep = 1;
+                showStep(currentStep);
+            };
+
+            resetBtn.addEventListener('click', resetForm);
+            
+            const callGemini = async (prompt, isJson = false, apiKey) => {
+                if (!apiKey) {
+                    throw new Error("Kunci API tidak ditemukan. Silakan masukkan kunci Anda.");
+                }
+
                 let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
                 const payload = { contents: chatHistory };
                 
@@ -396,8 +491,7 @@
                         responseSchema: { type: "OBJECT", properties: { plan: { type: "ARRAY", items: { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] } } } }
                     };
                 }
-
-                const apiKey = "AIzaSyDER8Payf1Y2SnyAiy4ny12L6tBo7WQbjY";
+                
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
                 
                 const response = await fetch(apiUrl, {
@@ -407,6 +501,10 @@
                 });
 
                 if (!response.ok) {
+                    if (response.status === 400 || response.status === 403) {
+                         localStorage.removeItem('geminiApiKey');
+                         throw new Error(`Kunci API tidak valid atau izin ditolak. Kunci yang salah telah dihapus, silakan coba lagi dengan kunci yang benar.`);
+                    }
                     const errorBody = await response.text();
                     throw new Error(`API error: ${response.status} ${response.statusText}. Body: ${errorBody}`);
                 }
@@ -542,7 +640,6 @@
                     card.querySelector('.get-ai-result-btn').addEventListener('click', () => handleDevelopCaption(item));
                     container.appendChild(card);
                 });
-                resultsEl.classList.remove('hidden');
             };
             
             const getPlatformIcon = (platform) => {
@@ -560,7 +657,8 @@
                 captionLoading.classList.remove('hidden');
                 try {
                     const prompt = buildCaptionPrompt(item);
-                    const resultText = await callGemini(prompt, false);
+                    const userApiKey = localStorage.getItem('geminiApiKey');
+                    const resultText = await callGemini(prompt, false, userApiKey);
                     captionContent.innerHTML = formatToHtml(resultText);
                 } catch (error) {
                     captionContent.innerHTML = `<p class="text-red-500">Gagal mengembangkan ide: ${error.message}</p>`;
@@ -617,20 +715,23 @@
             });
 
             const showErrorModal = (message) => {
-                errorMessage.textContent = `Maaf, terjadi masalah: ${message}. Silakan periksa koneksi Anda dan coba lagi.`;
+                errorMessage.textContent = message || `Maaf, terjadi masalah. Silakan periksa koneksi Anda dan coba lagi.`;
                 errorModal.classList.remove('hidden');
             };
             closeErrorModalBtn.addEventListener('click', () => errorModal.classList.add('hidden'));
 
-            const resetToForm = () => {
+            const resetToFormView = () => {
                 loadingEl.classList.add('hidden');
                 resultsEl.classList.add('hidden');
                 formWizard.classList.remove('hidden');
             };
 
-            restartBtn.addEventListener('click', () => {
-                window.location.reload();
-            });
+            const startOver = () => {
+                resetToFormView();
+                resetForm();
+            };
+
+            restartBtn.addEventListener('click', startOver);
 
             exportBtn.addEventListener('click', () => {
                 if (generatedData.length === 0) return;
@@ -662,6 +763,7 @@
             });
             
             const setDefaultDate = () => {
+                // Reset main start date
                 const startDateInput = getEl('start-date');
                 const today = new Date();
                 const year = today.getFullYear();
@@ -669,6 +771,10 @@
                 const day = String(today.getDate()).padStart(2, '0');
                 startDateInput.value = `${year}-${month}-${day}`;
                 startDateInput.min = `${year}-${month}-${day}`;
+                
+                // Also reset promotion dates
+                getEl('promotion-start-date').value = '';
+                getEl('promotion-end-date').value = '';
             };
 
 
