@@ -49,67 +49,54 @@
             border-width: 2px;
         }
         
-        .modal-content h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; color: #1e293b; }
-        .modal-content div > p { margin-bottom: 1rem; line-height: 1.6; }
+        .modal-content h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .modal-content p { margin-bottom: 1rem; line-height: 1.6; }
         .modal-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.6; }
         .modal-content blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; margin-left: 0; font-style: italic; color: #475569; }
         
         #api-key-section { transition: all 0.5s ease-in-out; }
         
-        /* Dropdown styling */
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none;
+        .card-loading-overlay {
             position: absolute;
+            top: 0;
+            left: 0;
             right: 0;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.75rem; /* rounded-xl */
             z-index: 10;
-            border-radius: 8px;
-            overflow: hidden;
         }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-        .dropdown-content a:hover { background-color: #f1f1f1; }
-        .dropdown:hover .dropdown-content { display: block; }
     </style>
 </head>
 <body class="text-slate-700">
 
     <div id="app" class="container mx-auto p-4 md:p-8 max-w-6xl">
         
-        <header class="text-center mb-12 relative">
-            <!-- User Profile / Login Button Area -->
-            <div id="auth-container" class="absolute top-0 right-0">
-                <!-- Anonymous User View -->
-                <button id="login-btn" class="hidden bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm">
-                    <i class="fab fa-google mr-2"></i>Login
-                </button>
-                
-                <!-- Logged In User View -->
-                <div id="user-profile-container" class="hidden dropdown">
-                     <button class="flex items-center gap-3 bg-white p-2 rounded-full border border-slate-300 shadow-sm">
-                         <img id="user-avatar" class="w-8 h-8 rounded-full" src="" alt="User Avatar">
-                         <span id="user-name" class="font-semibold text-slate-800 hidden md:block"></span>
-                     </button>
-                     <div class="dropdown-content">
-                        <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt fa-fw mr-2"></i>Logout</a>
-                     </div>
-                </div>
-            </div>
-
+        <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Perencana Konten AI</h1>
             <p class="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">Hasilkan ide konten sosial media yang siap pakai hanya dalam beberapa detik.</p>
             <div class="mt-6 flex justify-center items-center gap-4">
-                <button id="view-drafts-btn" class="bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm">
-                    <i class="fas fa-folder-open mr-2"></i>Lihat Draf Tersimpan
+                 <button id="view-drafts-btn" class="bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm">
+                    <i class="fas fa-folder-open mr-2"></i>Lihat Draf Lokal
                 </button>
+                <!-- Google Login & User Profile -->
+                <div id="auth-container">
+                    <button id="google-login-btn" class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm flex items-center gap-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo" class="w-5 h-5">
+                        Login untuk Sinkronisasi
+                    </button>
+                    <div id="user-profile" class="hidden flex items-center gap-3 bg-white border border-slate-200 rounded-full py-1 pr-3 pl-1 shadow-sm">
+                        <img id="user-profile-img" class="w-9 h-9 rounded-full" alt="User profile picture">
+                        <div class="text-left">
+                            <p id="user-profile-name" class="font-semibold text-sm text-slate-800"></p>
+                             <p id="user-info" class="text-xs text-slate-500">Tersinkronisasi</p>
+                        </div>
+                        <button id="logout-btn" title="Logout" class="ml-2 text-slate-500 hover:text-red-600 transition-colors"><i class="fas fa-right-from-bracket fa-lg"></i></button>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -171,83 +158,83 @@
 
                 <!-- Step 2: Audience, Tone & Focus -->
                 <div id="step-2" class="form-step">
-                     <div class="max-w-xl mx-auto">
-                         <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Gaya & Tujuan Konten</h2>
-                         <p class="text-center text-slate-500 mb-8">Pilih gaya yang paling sesuai dengan kepribadian brand Anda.</p>
-                         <div class="space-y-6">
-                             <div>
-                                 <label class="block text-sm font-medium text-slate-700 mb-3">Apa Tujuan Utama Konten Anda?</label>
-                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                     <div><input type="radio" name="business-stage" id="stage-awareness" value="Kesadaran" class="hidden option-radio form-input" checked><label for="stage-awareness" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-bullhorn text-2xl mb-2 text-purple-500"></i><span class="block text-sm font-semibold text-slate-700">Kesadaran</span><span class="text-xs text-slate-500">Jangkau audiens baru & perkenalkan brand</span></label></div>
-                                     <div><input type="radio" name="business-stage" id="stage-interaction" value="Interaksi" class="hidden option-radio form-input"><label for="stage-interaction" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-comments text-2xl mb-2 text-sky-500"></i><span class="block text-sm font-semibold text-slate-700">Interaksi</span><span class="text-xs text-slate-500">Bangun interaksi & kepercayaan</span></label></div>
-                                     <div><input type="radio" name="business-stage" id="stage-loyalty" value="Loyalitas" class="hidden option-radio form-input"><label for="stage-loyalty" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-crown text-2xl mb-2 text-amber-500"></i><span class="block text-sm font-semibold text-slate-700">Loyalitas</span><span class="text-xs text-slate-500">Pertahankan pelanggan & bangun komunitas</span></label></div>
-                                 </div>
-                             </div>
-                             
-                             <div>
-                                 <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Pembawaan Suasana Konten</label>
-                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                     <div><input type="radio" name="content-mood" id="mood-informative" value="Informatif dan Edukatif" class="hidden option-radio form-input" checked><label for="mood-informative" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-graduation-cap text-2xl mb-2 text-blue-500"></i><span class="block text-sm font-semibold text-slate-700">Informatif</span></label></div>
-                                     <div><input type="radio" name="content-mood" id="mood-casual" value="Santai dan Humoris" class="hidden option-radio form-input"><label for="mood-casual" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-smile-beam text-2xl mb-2 text-yellow-500"></i><span class="block text-sm font-semibold text-slate-700">Santai</span></label></div>
-                                     <div><input type="radio" name="content-mood" id="mood-professional" value="Profesional dan Formal" class="hidden option-radio form-input"><label for="mood-professional" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-briefcase text-2xl mb-2 text-slate-700"></i><span class="block text-sm font-semibold text-slate-700">Profesional</span></label></div>
-                                     <div><input type="radio" name="content-mood" id="mood-inspirational" value="Inspiratif dan Motivasi" class="hidden option-radio form-input"><label for="mood-inspirational" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-lightbulb text-2xl mb-2 text-orange-500"></i><span class="block text-sm font-semibold text-slate-700">Inspiratif</span></label></div>
-                                 </div>
-                             </div>
-                         </div>
-                    </div>
+                       <div class="max-w-xl mx-auto">
+                           <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Gaya & Tujuan Konten</h2>
+                           <p class="text-center text-slate-500 mb-8">Pilih gaya yang paling sesuai dengan kepribadian brand Anda.</p>
+                           <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-3">Apa Tujuan Utama Konten Anda?</label>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div><input type="radio" name="business-stage" id="stage-awareness" value="Kesadaran" class="hidden option-radio form-input" checked><label for="stage-awareness" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-bullhorn text-2xl mb-2 text-purple-500"></i><span class="block text-sm font-semibold text-slate-700">Kesadaran</span><span class="text-xs text-slate-500">Jangkau audiens baru & perkenalkan brand</span></label></div>
+                                        <div><input type="radio" name="business-stage" id="stage-interaction" value="Interaksi" class="hidden option-radio form-input"><label for="stage-interaction" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-comments text-2xl mb-2 text-sky-500"></i><span class="block text-sm font-semibold text-slate-700">Interaksi</span><span class="text-xs text-slate-500">Bangun interaksi & kepercayaan</span></label></div>
+                                        <div><input type="radio" name="business-stage" id="stage-loyalty" value="Loyalitas" class="hidden option-radio form-input"><label for="stage-loyalty" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-crown text-2xl mb-2 text-amber-500"></i><span class="block text-sm font-semibold text-slate-700">Loyalitas</span><span class="text-xs text-slate-500">Pertahankan pelanggan & bangun komunitas</span></label></div>
+                                    </div>
+                                </div>
+                                
+                                 <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Pembawaan Suasana Konten</label>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div><input type="radio" name="content-mood" id="mood-informative" value="Informatif dan Edukatif" class="hidden option-radio form-input" checked><label for="mood-informative" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-graduation-cap text-2xl mb-2 text-blue-500"></i><span class="block text-sm font-semibold text-slate-700">Informatif</span></label></div>
+                                        <div><input type="radio" name="content-mood" id="mood-casual" value="Santai dan Humoris" class="hidden option-radio form-input"><label for="mood-casual" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-smile-beam text-2xl mb-2 text-yellow-500"></i><span class="block text-sm font-semibold text-slate-700">Santai</span></label></div>
+                                        <div><input type="radio" name="content-mood" id="mood-professional" value="Profesional dan Formal" class="hidden option-radio form-input"><label for="mood-professional" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-briefcase text-2xl mb-2 text-slate-700"></i><span class="block text-sm font-semibold text-slate-700">Profesional</span></label></div>
+                                        <div><input type="radio" name="content-mood" id="mood-inspirational" value="Inspiratif dan Motivasi" class="hidden option-radio form-input"><label for="mood-inspirational" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fas fa-lightbulb text-2xl mb-2 text-orange-500"></i><span class="block text-sm font-semibold text-slate-700">Inspiratif</span></label></div>
+                                    </div>
+                                </div>
+                           </div>
+                       </div>
                 </div>
 
                 <!-- Step 3: Platform & Scheduling -->
                 <div id="step-3" class="form-step">
-                     <div class="max-w-2xl mx-auto">
-                         <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Platform & Penjadwalan</h2>
-                         <p class="text-center text-slate-500 mb-8">Atur jadwal dan platform agar rencana konten lebih terorganisir.</p>
-                         <div class="space-y-6">
-                              <div>
-                                 <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Platform Sosial Media</label>
-                                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                                     <div><input type="checkbox" id="platform-instagram" value="Instagram" class="hidden platform-checkbox form-input" checked><label for="platform-instagram" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-instagram text-3xl mb-2 text-pink-500"></i><span class="block text-sm font-semibold text-slate-700">Instagram</span></label></div>
-                                     <div><input type="checkbox" id="platform-tiktok" value="TikTok" class="hidden platform-checkbox form-input" checked><label for="platform-tiktok" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-tiktok text-3xl mb-2 text-black"></i><span class="block text-sm font-semibold text-slate-700">TikTok</span></label></div>
-                                     <div><input type="checkbox" id="platform-facebook" value="Facebook" class="hidden platform-checkbox form-input"><label for="platform-facebook" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-facebook text-3xl mb-2 text-blue-600"></i><span class="block text-sm font-semibold text-slate-700">Facebook</span></label></div>
-                                 </div>
-                             </div>
-                             <div id="plan-details-container" class="space-y-6">
-                                 <div>
-                                     <label for="start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai Rencana</label>
-                                     <input type="date" id="start-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                 </div>
-                                 <div id="duration-container">
-                                     <label for="duration" class="block text-sm font-medium text-slate-700">Durasi Rencana Konten</label>
-                                     <select id="duration" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                         <option value="7">1 Minggu</option>
-                                         <option value="14">2 Minggu</option>
-                                         <option value="30" selected>1 Bulan</option>
-                                     </select>
-                                 </div>
-                             </div>
-                             <div class="pt-6 border-t border-dashed border-slate-200">
-                                 <label class="flex items-center space-x-3 cursor-pointer">
-                                     <input type="checkbox" id="product-focus-toggle" class="form-input h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                     <span class="text-sm font-medium text-slate-700">Fokus pada Produk Unggulan? (Opsional)</span>
-                                 </label>
-                                 <div id="product-focus-fields" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-lg">
-                                     <div><label for="product-focus-input" class="block text-sm font-medium text-slate-700">Nama Produk/Layanan</label><input type="text" id="product-focus-input" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Es Kopi Pandan Gula Aren"></div>
-                                     <div><label for="product-description" class="block text-sm font-medium text-slate-700">Deskripsi Singkat Produk</label><textarea id="product-description" rows="2" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Minuman kopi dingin dengan rasa manis dan wangi pandan alami."></textarea></div>
-                                 </div>
-                             </div>
-                              <div class="pt-6 border-t border-dashed border-slate-200">
-                                  <h3 class="text-lg font-semibold text-center text-slate-800">Detail Promosi (Opsional)</h3>
-                                  <p class="text-center text-slate-500 mb-4 text-sm">Isi jika ada promosi yang sedang berjalan.</p>
-                                  <div class="space-y-4">
-                                      <div><label for="promotion-details" class="block text-sm font-medium text-slate-700">Jelaskan Promosi Anda</label><textarea id="promotion-details" rows="2" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Diskon 20% untuk semua minuman, Beli 1 Gratis 1"></textarea></div>
-                                      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                          <div><label for="promotion-start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai</label><input type="date" id="promotion-start-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
-                                          <div><label for="promotion-end-date" class="block text-sm font-medium text-slate-700">Tanggal Berakhir</label><input type="date" id="promotion-end-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
-                                      </div>
-                                  </div>
-                              </div>
-                         </div>
-                    </div>
+                       <div class="max-w-2xl mx-auto">
+                           <h2 class="text-2xl font-bold mb-2 text-center text-slate-900">Platform & Penjadwalan</h2>
+                           <p class="text-center text-slate-500 mb-8">Atur jadwal dan platform agar rencana konten lebih terorganisir.</p>
+                           <div class="space-y-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-3">Pilih Platform Sosial Media</label>
+                                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                                        <div><input type="checkbox" id="platform-instagram" value="Instagram" class="hidden platform-checkbox form-input" checked><label for="platform-instagram" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-instagram text-3xl mb-2 text-pink-500"></i><span class="block text-sm font-semibold text-slate-700">Instagram</span></label></div>
+                                        <div><input type="checkbox" id="platform-tiktok" value="TikTok" class="hidden platform-checkbox form-input" checked><label for="platform-tiktok" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-tiktok text-3xl mb-2 text-black"></i><span class="block text-sm font-semibold text-slate-700">TikTok</span></label></div>
+                                        <div><input type="checkbox" id="platform-facebook" value="Facebook" class="hidden platform-checkbox form-input"><label for="platform-facebook" class="cursor-pointer flex flex-col items-center justify-center text-center p-4 border-2 border-slate-200 rounded-lg h-full"><i class="fab fa-facebook text-3xl mb-2 text-blue-600"></i><span class="block text-sm font-semibold text-slate-700">Facebook</span></label></div>
+                                    </div>
+                                </div>
+                               <div id="plan-details-container" class="space-y-6">
+                                    <div>
+                                        <label for="start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai Rencana</label>
+                                        <input type="date" id="start-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    </div>
+                                    <div id="duration-container">
+                                        <label for="duration" class="block text-sm font-medium text-slate-700">Durasi Rencana Konten</label>
+                                        <select id="duration" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            <option value="7">1 Minggu</option>
+                                            <option value="14">2 Minggu</option>
+                                            <option value="30" selected>1 Bulan</option>
+                                        </select>
+                                    </div>
+                               </div>
+                               <div class="pt-6 border-t border-dashed border-slate-200">
+                                    <label class="flex items-center space-x-3 cursor-pointer">
+                                        <input type="checkbox" id="product-focus-toggle" class="form-input h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                        <span class="text-sm font-medium text-slate-700">Fokus pada Produk Unggulan? (Opsional)</span>
+                                    </label>
+                                    <div id="product-focus-fields" class="hidden mt-4 space-y-4 bg-slate-50 p-4 rounded-lg">
+                                        <div><label for="product-focus-input" class="block text-sm font-medium text-slate-700">Nama Produk/Layanan</label><input type="text" id="product-focus-input" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Es Kopi Pandan Gula Aren"></div>
+                                        <div><label for="product-description" class="block text-sm font-medium text-slate-700">Deskripsi Singkat Produk</label><textarea id="product-description" rows="2" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Minuman kopi dingin dengan rasa manis dan wangi pandan alami."></textarea></div>
+                                    </div>
+                               </div>
+                                 <div class="pt-6 border-t border-dashed border-slate-200">
+                                    <h3 class="text-lg font-semibold text-center text-slate-800">Detail Promosi (Opsional)</h3>
+                                    <p class="text-center text-slate-500 mb-4 text-sm">Isi jika ada promosi yang sedang berjalan.</p>
+                                    <div class="space-y-4">
+                                        <div><label for="promotion-details" class="block text-sm font-medium text-slate-700">Jelaskan Promosi Anda</label><textarea id="promotion-details" rows="2" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Diskon 20% untuk semua minuman, Beli 1 Gratis 1"></textarea></div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div><label for="promotion-start-date" class="block text-sm font-medium text-slate-700">Tanggal Mulai</label><input type="date" id="promotion-start-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
+                                            <div><label for="promotion-end-date" class="block text-sm font-medium text-slate-700">Tanggal Berakhir</label><input type="date" id="promotion-end-date" class="form-input mt-1 block w-full px-4 py-2.5 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
+                       </div>
                 </div>
 
                 <!-- Navigation Buttons -->
@@ -301,7 +288,13 @@
                     </div>
                     <!-- Draft Content Viewer -->
                     <div id="draft-viewer" class="md:col-span-2 hidden">
-                        <h4 id="draft-viewer-title" class="text-xl font-bold text-slate-800 mb-4 pb-2 border-b">Detail Draf</h4>
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b">
+                            <h4 id="draft-viewer-title" class="text-xl font-bold text-slate-800">Detail Draf</h4>
+                            <div id="draft-viewer-actions" class="mt-3 sm:mt-0 flex gap-2">
+                                 <button id="export-draft-pdf-btn" class="bg-red-100 text-red-800 font-semibold py-1.5 px-3 rounded-lg hover:bg-red-200 transition-colors text-sm"><i class="fas fa-file-pdf mr-2"></i>PDF</button>
+                                 <button id="export-draft-csv-btn" class="bg-blue-100 text-blue-800 font-semibold py-1.5 px-3 rounded-lg hover:bg-blue-200 transition-colors text-sm"><i class="fas fa-download mr-2"></i>CSV</button>
+                            </div>
+                        </div>
                         <div id="draft-viewer-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
                             <!-- Selected draft content will be rendered here -->
                         </div>
@@ -327,24 +320,6 @@
             </div>
         </div>
 
-        <!-- Save Draft Choice Modal -->
-        <div id="save-draft-choice-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
-            <div class="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-md w-full text-center">
-                 <div class="w-16 h-16 mx-auto flex-shrink-0 bg-yellow-100 rounded-full flex items-center justify-center">
-                     <i class="fas fa-cloud-upload-alt text-yellow-500 text-3xl"></i>
-                 </div>
-                <h3 class="font-bold text-slate-800 text-lg md:text-xl mt-4">Simpan Draf Anda</h3>
-                <p class="text-slate-600 text-sm mt-2">Untuk mengakses draf ini di perangkat lain, simpan ke Akun Google Anda. Gratis dan hanya butuh satu klik.</p>
-                <div class="flex flex-col gap-3 mt-6">
-                     <button id="save-to-google-account-btn" class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2">
-                        <i class="fab fa-google"></i> Simpan & Sinkronkan dengan Google
-                     </button>
-                     <button id="save-to-browser-btn" class="w-full bg-slate-200 text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">Lain Kali, Simpan di Peramban Ini Saja</button>
-                </div>
-            </div>
-        </div>
-
-
         <!-- API Key Modal -->
         <div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
             <div class="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-md w-full">
@@ -354,7 +329,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-slate-800 text-lg md:text-xl">Satu Langkah Lagi: Hubungkan AI Anda</h3>
-                        <p id="api-key-subtitle" class="text-slate-600 text-sm">Masukkan kunci aktivasi gratis Anda untuk membuat rencana konten.</p>
+                        <p class="text-slate-600 text-sm">Masukkan kunci aktivasi gratis Anda untuk membuat rencana konten.</p>
                     </div>
                 </div>
                 <div>
@@ -367,7 +342,7 @@
                     </div>
                     <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block mt-2 text-xs text-blue-600 hover:underline">Belum punya? Dapatkan gratis di sini <i class="fas fa-external-link-alt ml-1"></i></a>
                      <div class="mt-4 p-3 bg-slate-100 rounded-lg text-xs text-slate-600">
-                         <p><i class="fas fa-shield-halved mr-1"></i>Kunci Anda 100% aman dan hanya disimpan di akun Anda.</p>
+                         <p><i class="fas fa-shield-halved mr-1"></i>Kunci Anda aman dan disimpan di browser Anda. Login dengan Google untuk menyinkronkan antar perangkat.</p>
                      </div>
                 </div>
                 <div class="flex gap-3 mt-6">
@@ -405,13 +380,31 @@
             </div>
         </div>
 
+        <!-- Add to Calendar Modal -->
+        <div id="calendar-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-[60]">
+            <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full text-center">
+                <h3 class="text-xl font-semibold text-slate-900 mb-4">Tambahkan ke Kalender</h3>
+                <p class="text-slate-600 mb-6">Pilih layanan kalender Anda untuk menjadwalkan ide konten ini.</p>
+                <div class="space-y-3">
+                    <button id="google-calendar-btn" class="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
+                        <i class="fab fa-google"></i> Google Calendar
+                    </button>
+                    <button id="ics-download-btn" class="w-full bg-slate-700 text-white font-bold py-3 px-4 rounded-lg hover:bg-slate-800 transition-colors flex items-center justify-center gap-2">
+                        <i class="fas fa-file-download"></i> Outlook, Apple, dll (.ics)
+                    </button>
+                </div>
+                <button id="close-calendar-modal" class="mt-6 text-sm text-slate-500 hover:text-slate-700">Batal</button>
+            </div>
+        </div>
+
+
     </div>
 
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL AND FIREBASE VARIABLES ---
         const getEl = (id) => document.getElementById(id);
@@ -420,67 +413,19 @@
         
         let app, db, auth;
         let userId = null;
-        let userAppDocRef = null; 
         let userApiKey = null;
+        let docRef = null;
         let isAuthReady = false;
-        let pendingDraftData = null;
+        let localData = {}; // Object to hold local form data
 
         let currentStep = 1;
         const totalSteps = 3;
         let generatedData = [];
         let currentInputs = {};
+        let currentCalendarItem = null;
+        let currentDraftObject = null;
         
-        // --- UI Elements ---
-        const loginBtn = getEl('login-btn');
-        const logoutBtn = getEl('logout-btn');
-        const userProfileContainer = getEl('user-profile-container');
-        const userAvatar = getEl('user-avatar');
-        const userName = getEl('user-name');
-        const saveDraftChoiceModal = getEl('save-draft-choice-modal');
-        const saveToGoogleAccountBtn = getEl('save-to-google-account-btn');
-        const saveToBrowserBtn = getEl('save-to-browser-btn');
-        const apiKeySubtitle = getEl('api-key-subtitle');
-        const prevBtn = getEl('prev-btn');
-        const nextBtn = getEl('next-btn');
-        const resetBtn = getEl('reset-btn');
-        const exportPdfBtn = getEl('export-pdf-btn');
-        const exportCsvBtn = getEl('export-csv-btn');
-        const restartBtn = getEl('restart-btn');
-        const errorModal = getEl('error-modal');
-        const errorMessage = getEl('error-message');
-        const closeErrorModalBtn = getEl('close-error-modal');
-        const captionModal = getEl('caption-modal');
-        const closeCaptionModalBtn = getEl('close-caption-modal');
-        const captionLoading = getEl('caption-loading');
-        const captionContent = getEl('caption-content');
-        const copyCaptionBtn = getEl('copy-caption-btn');
-        const productFocusToggle = getEl('product-focus-toggle');
-        const productFocusFields = getEl('product-focus-fields');
-        const planDetailsContainer = getEl('plan-details-container');
-        const formWizard = getEl('form-wizard');
-        const loadingEl = getEl('loading');
-        const resultsEl = getEl('results');
-        const generateBtn = getEl('generate-btn');
-        const apiKeyModal = getEl('api-key-modal');
-        const apiKeyModalInput = getEl('api-key-modal-input');
-        const saveApiKeyModalBtn = getEl('save-api-key-modal-btn');
-        const closeApiKeyModalBtn = getEl('close-api-key-modal-btn');
-        const toggleApiKeyVisibilityBtn = getEl('toggle-api-key-visibility');
-        const saveDraftBtn = getEl('save-draft-btn');
-        const viewDraftsBtn = getEl('view-drafts-btn');
-        const draftsModal = getEl('drafts-modal');
-        const closeDraftsModalBtn = getEl('close-drafts-modal');
-        const draftsList = getEl('drafts-list');
-        const draftViewer = getEl('draft-viewer');
-        const draftViewerTitle = getEl('draft-viewer-title');
-        const draftViewerContent = getEl('draft-viewer-content');
-        const draftAiResultModal = getEl('draft-ai-result-modal');
-        const closeDraftAiResultModalBtn = getEl('close-draft-ai-result-modal');
-        const draftCaptionLoading = getEl('draft-caption-loading');
-        const copyDraftCaptionBtn = getEl('copy-draft-caption-btn');
-
-
-        // --- DEBOUNCE FUNCTION for Firestore writes ---
+        // --- DEBOUNCE FUNCTION ---
         const debounce = (func, delay) => {
             let timeout;
             return (...args) => {
@@ -488,156 +433,168 @@
                 timeout = setTimeout(() => func.apply(this, args), delay);
             };
         };
+        
+        // --- DATA STORAGE LOGIC ---
+
+        // Gets data from local memory or Firestore based on auth state
+        const loadData = async () => {
+            if (auth.currentUser && !auth.currentUser.isAnonymous) {
+                await loadFromFirestore();
+            } else {
+                loadFromLocalStorage();
+            }
+        };
+
+        // Saves data to local memory or Firestore based on auth state
+        const saveData = async () => {
+             if (auth.currentUser && !auth.currentUser.isAnonymous) {
+                await saveToFirestore();
+            } else {
+                saveToLocalStorage();
+            }
+        };
+        
+        const debouncedSave = debounce(saveData, 1500);
 
         // --- FIREBASE INITIALIZATION & AUTH ---
         const initFirebase = async () => {
             try {
-                console.log("Domain Pratinjau Saat Ini:", window.location.hostname);
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
-                
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        // Correct path for private user data
-                        userAppDocRef = doc(db, `artifacts/${appId}/users/${userId}`);
-                        
-                        if(user.isAnonymous) {
-                            updateUIForAnonymousUser();
-                        } else {
-                            updateUIForLoggedInUser(user);
-                            if (pendingDraftData) {
-                                await handleSaveToDrafts(true);
-                                pendingDraftData = null;
-                            }
-                        }
-                        
-                        await loadUserData();
-                        isAuthReady = true;
+                const provider = new GoogleAuthProvider();
 
-                    } else {
-                        await signInAnonymously(auth);
+                getEl('google-login-btn').addEventListener('click', async () => {
+                    try {
+                        const localAnonymousData = getFormInputs(true);
+                        const result = await signInWithPopup(auth, provider);
+                        const user = result.user;
+                        
+                        // After successful Google sign-in, merge local data to Firestore
+                        if (user) {
+                            const userDocRef = doc(db, `artifacts/${appId}/users/${user.uid}/contentPlanner`, "formData");
+                            await setDoc(userDocRef, localAnonymousData, { merge: true });
+                            console.log("Local data merged to Firestore.");
+                        }
+
+                    } catch(error) {
+                        console.error("Google Sign-In Error", error);
+                        showErrorModal(`Gagal login dengan Google: ${error.message}`);
                     }
                 });
 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    if (!auth.currentUser) {
-                        await signInAnonymously(auth);
+                getEl('logout-btn').addEventListener('click', () => {
+                    signOut(auth);
+                });
+
+                onAuthStateChanged(auth, async (user) => {
+                    const userProfileEl = getEl('user-profile');
+                    const googleLoginBtnEl = getEl('google-login-btn');
+                    
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+
+                        if (user.isAnonymous) {
+                            userProfileEl.classList.add('hidden');
+                            googleLoginBtnEl.classList.remove('hidden');
+                            docRef = null; // No firestore doc for anonymous users
+                            loadFromLocalStorage();
+                        } else {
+                            docRef = doc(db, `artifacts/${appId}/users/${userId}/contentPlanner`, "formData");
+                            getEl('user-profile-name').textContent = user.displayName;
+                            getEl('user-profile-img').src = user.photoURL;
+                            userProfileEl.classList.remove('hidden');
+                            googleLoginBtnEl.classList.add('hidden');
+                            await loadFromFirestore();
+                        }
+                    } else {
+                         // This case should ideally not happen if anonymous sign-in is the fallback.
+                         isAuthReady = false;
+                         signInAnonymously(auth); // Re-authenticate as anonymous
                     }
+                });
+                
+                // Initial sign-in
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
                 }
+
+
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
                 showErrorModal("Gagal menghubungkan ke layanan. Beberapa fitur mungkin tidak berfungsi.");
             }
         };
 
-        const handleGoogleLogin = async () => {
-            const provider = new GoogleAuthProvider();
+        // --- LOCAL STORAGE & FIRESTORE DATA HANDLING ---
+        const getLocalStorageKey = (type) => `contentPlanner_${type}`;
+
+        const loadFromLocalStorage = () => {
+            const data = JSON.parse(localStorage.getItem(getLocalStorageKey('formData'))) || {};
+            localData = data;
+            populateForm(data);
+            userApiKey = data.geminiApiKey || null;
+            if (!Object.keys(data).length) setDefaultDate();
+        };
+
+        const saveToLocalStorage = () => {
+            const dataToSave = getFormInputs(true);
+            localStorage.setItem(getLocalStorageKey('formData'), JSON.stringify(dataToSave));
+            console.log("Form data saved to Local Storage.");
+        };
+        
+        const loadFromFirestore = async () => {
+            if (!docRef) return;
             try {
-                await signInWithPopup(auth, provider);
-                saveDraftChoiceModal.classList.add('hidden');
-            } catch (error) {
-                console.error("Google login failed:", error);
-                if (error.code === 'auth/unauthorized-domain') {
-                    showErrorModal(`Domain tidak diizinkan. Domain pratinjau Anda adalah: <strong>${window.location.hostname}</strong>. Harap tambahkan domain ini ke daftar "Authorized domains" di Firebase Authentication Anda.`);
-                } else {
-                    showErrorModal(`Gagal login dengan Google: ${error.message}`);
-                }
-            }
-        };
-
-        const handleLogout = async () => {
-            try {
-                await signOut(auth);
-                window.location.reload();
-            } catch (error) {
-                console.error("Logout failed:", error);
-                showErrorModal("Gagal logout.");
-            }
-        };
-
-        // --- UI UPDATE FUNCTIONS ---
-        const updateUIForLoggedInUser = (user) => {
-            userProfileContainer.classList.remove('hidden');
-            loginBtn.classList.add('hidden');
-            userAvatar.src = user.photoURL || 'https://placehold.co/40x40/e2e8f0/64748b?text=A';
-            userName.textContent = user.displayName || 'User';
-        };
-
-        const updateUIForAnonymousUser = () => {
-            userProfileContainer.classList.add('hidden');
-            loginBtn.classList.remove('hidden');
-        };
-
-
-        // --- FIRESTORE DATA HANDLING (USER DATA) ---
-        const loadUserData = async () => {
-            if (!userAppDocRef) return;
-            try {
-                const docSnap = await getDoc(userAppDocRef);
+                const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    if (data.formData) {
-                        populateForm(data.formData);
-                    } else {
-                        setDefaultDate();
-                    }
+                    populateForm(data);
                     userApiKey = data.geminiApiKey || null;
                 } else {
-                    // This is a new user, create an empty document to prevent further permission errors
-                    await setDoc(userAppDocRef, { createdAt: new Date().toISOString() });
                     setDefaultDate();
                 }
             } catch (error) {
-                console.error("Error loading user data from Firestore:", error);
-                showErrorModal("Gagal memuat data pengguna dari cloud. Pastikan domain pratinjau Anda sudah ditambahkan di Firebase.");
+                console.error("Error loading data from Firestore:", error);
+                showErrorModal("Gagal memuat data yang tersimpan.");
             }
         };
 
-        const saveFormDataToFirestore = async () => {
-            if (!userAppDocRef || !isAuthReady) return;
-            const formData = getFormInputs();
+        const saveToFirestore = async () => {
+            if (!docRef) return;
+            const dataToSave = getFormInputs(true);
             try {
-                await setDoc(userAppDocRef, { formData: formData }, { merge: true });
+                await setDoc(docRef, dataToSave, { merge: true });
                 console.log("Form data saved to Firestore.");
             } catch (error) {
-                console.error("Error saving form data to Firestore:", error);
+                console.error("Error saving data to Firestore:", error);
             }
         };
-
-        const saveApiKeyToFirestore = async (key) => {
-             if (!userAppDocRef || !isAuthReady) return;
-             try {
-                await setDoc(userAppDocRef, { geminiApiKey: key }, { merge: true });
-                console.log("API Key saved to Firestore.");
-             } catch(error) {
-                console.error("Error saving API Key:", error);
-                showErrorModal("Gagal menyimpan Kunci API.");
-             }
-        }
-
-        const debouncedSaveFormData = debounce(saveFormDataToFirestore, 1500);
 
         const populateForm = (data) => {
              if (!data) return;
-             currentInputs = data; // IMPORTANT: Initialize currentInputs
              document.querySelectorAll('.form-input').forEach(el => {
-                 if (data[el.id] !== undefined) {
+                 const key = el.id || el.name;
+                 if (data[key] !== undefined) {
                      if (el.type === 'checkbox') {
-                         el.checked = data[el.id];
+                        if (Array.isArray(data[key])) { // For platform checkboxes
+                            el.checked = data[key].includes(el.value);
+                        } else {
+                            el.checked = data[key];
+                        }
                      } else if (el.type === 'radio') {
-                          if (el.value === data[el.name]) {
-                              el.checked = true;
-                          }
+                           if (el.value === data[key]) {
+                               el.checked = true;
+                           }
                      }
                      else {
-                         el.value = data[el.id];
+                         el.value = data[key];
                      }
                  }
              });
+             
+             // Handle elements where name is used instead of id for grouping
              if(data['business-stage']) {
                  const stageRadio = document.querySelector(`input[name="business-stage"][value="${data['business-stage']}"]`);
                  if(stageRadio) stageRadio.checked = true;
@@ -646,87 +603,63 @@
                  const moodRadio = document.querySelector(`input[name="content-mood"][value="${data['content-mood']}"]`);
                  if(moodRadio) moodRadio.checked = true;
              }
-             if(data.platforms){
-                 document.querySelectorAll('.platform-checkbox').forEach(cb => {
-                     cb.checked = data.platforms.includes(cb.value);
-                 });
-             }
              productFocusToggle.dispatchEvent(new Event('change'));
         };
 
 
-        // --- DRAFT (FIRESTORE) LOGIC ---
-        // Fetches drafts from Firestore user document
-        const getDrafts = async () => {
-            if (!userAppDocRef) return [];
-            try {
-                const docSnap = await getDoc(userAppDocRef);
-                if (docSnap.exists() && docSnap.data().drafts) {
-                    return docSnap.data().drafts;
-                }
-                return [];
-            } catch (error) {
-                console.error("Error fetching drafts:", error);
-                showErrorModal("Gagal memuat draf dari cloud.");
-                return [];
-            }
+        // --- DRAFT (localStorage only) LOGIC ---
+        const saveDraftBtn = getEl('save-draft-btn');
+        const viewDraftsBtn = getEl('view-drafts-btn');
+        const draftsModal = getEl('drafts-modal');
+        const closeDraftsModalBtn = getEl('close-drafts-modal');
+        const draftsList = getEl('drafts-list');
+        const draftViewer = getEl('draft-viewer');
+        const draftViewerTitle = getEl('draft-viewer-title');
+        const draftViewerContent = getEl('draft-viewer-content');
+        
+        const draftAiResultModal = getEl('draft-ai-result-modal');
+        const closeDraftAiResultModalBtn = getEl('close-draft-ai-result-modal');
+        const draftCaptionLoading = getEl('draft-caption-loading');
+        const draftCaptionContent = getEl('draft-caption-content');
+        const copyDraftCaptionBtn = getEl('copy-draft-caption-btn');
+
+        const getDraftsKey = () => `contentPlannerDrafts_local`; // Always save drafts locally
+
+        const getDrafts = () => {
+            return JSON.parse(localStorage.getItem(getDraftsKey())) || [];
+        };
+
+        const saveDrafts = (drafts) => {
+            localStorage.setItem(getDraftsKey(), JSON.stringify(drafts));
         };
         
-        const saveDrafts = async (drafts) => {
-            if (!userAppDocRef) return;
-            try {
-                await setDoc(userAppDocRef, { drafts: drafts }, { merge: true });
-            } catch (error) {
-                console.error("Error saving drafts:", error);
-                showErrorModal("Gagal menyimpan draf ke cloud.");
-            }
-        };
-
-        // Handles the "Save to Drafts" button click
-        const handleSaveToDrafts = async (forceSave = false) => {
-            const user = auth.currentUser;
-            if (!user) return;
-            currentInputs = getFormInputs(); // Get fresh inputs before saving
-
-            if (user.isAnonymous && !forceSave) {
-                pendingDraftData = {
+        if(saveDraftBtn){
+            saveDraftBtn.addEventListener('click', () => {
+                const drafts = getDrafts();
+                const newDraft = {
                     id: crypto.randomUUID(),
-                    businessName: currentInputs['business-name'] || 'Tanpa Nama',
+                    businessName: currentInputs.businessName || currentInputs.productName || 'Tanpa Nama',
                     savedAt: new Date().toISOString(),
                     planData: generatedData,
                     inputs: currentInputs
                 };
-                saveDraftChoiceModal.classList.remove('hidden');
-                return;
-            }
-
-            const draftDataToSave = pendingDraftData || {
-                id: crypto.randomUUID(),
-                businessName: currentInputs['business-name'] || 'Tanpa Nama',
-                savedAt: new Date().toISOString(),
-                planData: generatedData,
-                inputs: currentInputs
-            };
-            
-            const drafts = await getDrafts();
-            drafts.unshift(draftDataToSave);
-
-            await saveDrafts(drafts);
-            saveDraftBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
-            saveDraftBtn.disabled = true;
-            saveDraftBtn.classList.add('cursor-not-allowed', 'opacity-60');
-        };
+                drafts.unshift(newDraft);
+                saveDrafts(drafts);
+                
+                saveDraftBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Tersimpan!';
+                saveDraftBtn.disabled = true;
+                saveDraftBtn.classList.add('cursor-not-allowed', 'opacity-60');
+            });
+        }
         
-        // Displays the drafts modal with data from Firestore
-        const showDraftsModal = async () => {
-            const drafts = await getDrafts();
+        const showDraftsModal = () => {
+            const drafts = getDrafts();
             draftsList.innerHTML = ''; 
             draftViewer.classList.add('hidden');
 
             if (drafts.length === 0) {
-                draftsList.innerHTML = `<p class="text-slate-500 text-center">Belum ada draf yang tersimpan di akun Anda.</p>`;
+                draftsList.innerHTML = `<p class="text-slate-500 text-center">Belum ada draf yang tersimpan.</p>`;
             } else {
-                drafts.sort((a, b) => new Date(b.savedAt) - new Date(a.savedAt));
                 drafts.forEach(draft => {
                     const li = document.createElement('li');
                     li.className = 'p-3 rounded-lg hover:bg-slate-100 cursor-pointer border border-slate-200';
@@ -743,9 +676,9 @@
                         if (e.target.closest('.delete-draft-btn')) return;
                         viewDraft(draft);
                     });
-                    li.querySelector('.delete-draft-btn').addEventListener('click', async (e) => {
+                    li.querySelector('.delete-draft-btn').addEventListener('click', (e) => {
                         e.stopPropagation();
-                        await deleteDraft(draft.id);
+                        deleteDraft(draft.id);
                     });
                     draftsList.appendChild(li);
                 });
@@ -754,36 +687,166 @@
         };
 
         const viewDraft = (draft) => {
+            currentDraftObject = draft; // Store the currently viewed draft object
             if (draft.inputs) {
                 currentInputs = draft.inputs;
             }
             draftViewerTitle.textContent = `Detail Draf: ${draft.businessName}`;
             renderResults(draft.planData, draftViewerContent, draft);
             draftViewer.classList.remove('hidden');
+            
+            getEl('export-draft-pdf-btn').onclick = () => {
+                handleExportPDF(draft.planData, `Draf - ${draft.businessName}`, `Disimpan pada ${new Date(draft.savedAt).toLocaleString('id-ID')}`);
+            };
+
+            getEl('export-draft-csv-btn').onclick = () => {
+                handleExportCSV(draft.planData, `Draf - ${draft.businessName}`);
+            };
         };
         
-        const deleteDraft = async (draftId) => {
-            let drafts = await getDrafts();
-            drafts = drafts.filter(d => d.id !== draftId);
-            await saveDrafts(drafts);
-            await showDraftsModal();
+        const deleteDraft = (draftId) => {
+             let drafts = getDrafts();
+             drafts = drafts.filter(d => d.id !== draftId);
+             saveDrafts(drafts);
+             showDraftsModal();
+        };
+
+        if(viewDraftsBtn) viewDraftsBtn.addEventListener('click', showDraftsModal);
+        if(closeDraftsModalBtn) closeDraftsModalBtn.addEventListener('click', () => {
+            draftsModal.classList.add('hidden');
+            currentDraftObject = null;
+        });
+        if(closeDraftAiResultModalBtn) closeDraftAiResultModalBtn.addEventListener('click', () => draftAiResultModal.classList.add('hidden'));
+
+
+        // UI Elements
+        const apiKeyModal = getEl('api-key-modal');
+        const apiKeyModalInput = getEl('api-key-modal-input');
+        const saveApiKeyModalBtn = getEl('save-api-key-modal-btn');
+        const closeApiKeyModalBtn = getEl('close-api-key-modal-btn');
+        const toggleApiKeyVisibilityBtn = getEl('toggle-api-key-visibility');
+        const toggleApiKeyIcon = getEl('toggle-api-key-icon');
+
+        const formWizard = getEl('form-wizard');
+        const loadingEl = getEl('loading');
+        const resultsEl = getEl('results');
+        const resultsGrid = getEl('results-grid');
+        const resultsTitle = getEl('results-title');
+        const resultsSubtitle = getEl('results-subtitle');
+
+        const prevBtn = getEl('prev-btn');
+        const nextBtn = getEl('next-btn');
+        const generateBtn = getEl('generate-btn');
+        const resetBtn = getEl('reset-btn'); 
+
+        const exportPdfBtn = getEl('export-pdf-btn');
+        const exportCsvBtn = getEl('export-csv-btn');
+        const restartBtn = getEl('restart-btn');
+
+        const errorModal = getEl('error-modal');
+        const errorMessage = getEl('error-message');
+        const closeErrorModalBtn = getEl('close-error-modal');
+        const captionModal = getEl('caption-modal');
+        const closeCaptionModalBtn = getEl('close-caption-modal');
+        const captionLoading = getEl('caption-loading');
+        const captionContent = getEl('caption-content');
+        const copyCaptionBtn = getEl('copy-caption-btn');
+        
+        const productFocusToggle = getEl('product-focus-toggle');
+        const productFocusFields = getEl('product-focus-fields');
+        const planDetailsContainer = getEl('plan-details-container');
+        
+        // --- UI LOGIC ---
+        const updateButtons = () => {
+            prevBtn.disabled = currentStep === 1;
+            if (currentStep === totalSteps) {
+                nextBtn.classList.add('hidden');
+                generateBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                generateBtn.classList.add('hidden');
+            }
+        };
+
+        const updateStepIndicators = () => {
+            for (let i = 1; i <= totalSteps; i++) {
+                const indicator = getEl(`step-indicator-${i}`);
+                indicator.classList.remove('active', 'completed');
+                if (i < currentStep) {
+                    indicator.classList.add('completed');
+                } else if (i === currentStep) {
+                    indicator.classList.add('active');
+                }
+            }
+        };
+
+        const showStep = (step) => {
+            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+            getEl(`step-${step}`).classList.add('active');
+            updateButtons();
+            updateStepIndicators();
+        };
+
+        nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; showStep(currentStep); } });
+        prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; showStep(currentStep); } });
+
+        const showLoading = () => {
+            formWizard.classList.add('hidden');
+            loadingEl.classList.remove('hidden');
+            resultsEl.classList.add('hidden');
+        };
+
+        const hideLoading = () => {
+            loadingEl.classList.add('hidden');
         };
         
-        // --- Other UI and Core Logic ---
+        // --- Core Application Logic ---
+        const generatePlan = async () => {
+            showLoading();
+            try {
+                if(saveDraftBtn) {
+                    saveDraftBtn.disabled = false;
+                    saveDraftBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Simpan ke Draf';
+                    saveDraftBtn.classList.remove('cursor-not-allowed', 'opacity-60');
+                }
+
+                currentInputs = getFormInputs();
+                const prompt = buildPlannerPrompt(currentInputs);
+                const result = await callGemini(prompt, true, userApiKey, plannerSchema);
+                generatedData = result.plan || [];
+                
+                const businessName = getEl('business-name').value;
+                resultsTitle.textContent = currentInputs.isProductFocus ? `Ide Fokus untuk "${currentInputs.productName}"` : `Rencana Konten untuk "${businessName}"`;
+                resultsSubtitle.textContent = currentInputs.isProductFocus ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
+                
+                renderResults(generatedData, resultsGrid);
+                resultsEl.classList.remove('hidden');
+                if(saveDraftBtn) saveDraftBtn.classList.remove('hidden');
+                formWizard.classList.add('hidden');
+            } catch (error) {
+                console.error('Error generating content:', error);
+                if (error instanceof InvalidApiKeyError) {
+                    showErrorModal(error.message);
+                    apiKeyModal.classList.remove('hidden');
+                    resetToFormView();
+                } else {
+                    showErrorModal(error.message);
+                    resetToFormView();
+                }
+            } finally {
+                hideLoading();
+            }
+        };
+
         generateBtn.addEventListener('click', async () => {
             if (userApiKey) {
                 generatePlan();
             } else {
-                if(auth.currentUser && !auth.currentUser.isAnonymous) {
-                    apiKeySubtitle.textContent = "Masukkan Kunci AI Anda sekali saja. Kami akan menyimpannya dengan aman ke akun Anda.";
-                } else {
-                     apiKeySubtitle.textContent = "Masukkan kunci aktivasi gratis Anda untuk membuat rencana konten.";
-                }
                 apiKeyModal.classList.remove('hidden');
             }
         });
 
-        saveApiKeyModalBtn.addEventListener('click', async () => {
+        saveApiKeyModalBtn.addEventListener('click', () => {
             const inputKey = apiKeyModalInput.value.trim();
             if (!inputKey) {
                 showErrorModal("Mohon masukkan API Key Anda.");
@@ -791,40 +854,67 @@
             }
             userApiKey = inputKey;
             apiKeyModal.classList.add('hidden');
-            await saveApiKeyToFirestore(inputKey);
-            await generatePlan();
+            saveData().then(() => {
+                 generatePlan();
+            });
         });
         
-        const generatePlan = async () => {
-            showLoading();
-            try {
-                saveDraftBtn.disabled = false;
-                saveDraftBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Simpan ke Draf';
-                saveDraftBtn.classList.remove('cursor-not-allowed', 'opacity-60');
+        closeApiKeyModalBtn.addEventListener('click', () => {
+            apiKeyModal.classList.add('hidden');
+        });
 
-                currentInputs = getFormInputs();
-                const prompt = buildPlannerPrompt(currentInputs);
-                const result = await callGemini(prompt, true, userApiKey);
-                generatedData = result.plan || [];
-                
-                const businessName = getEl('business-name').value;
-                getEl('results-title').textContent = currentInputs['product-focus-toggle'] ? `Ide Fokus untuk "${currentInputs['product-focus-input']}"` : `Rencana Konten untuk "${businessName}"`;
-                getEl('results-subtitle').textContent = currentInputs['product-focus-toggle'] ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
-                
-                renderResults(generatedData, getEl('results-grid'));
-                getEl('results').classList.remove('hidden');
-                saveDraftBtn.classList.remove('hidden');
-                getEl('form-wizard').classList.add('hidden');
-            } catch (error) {
-                console.error('Error generating content:', error);
-                showErrorModal(error.message);
-                resetToFormView();
-            } finally {
-                hideLoading();
-            }
+        toggleApiKeyVisibilityBtn.addEventListener('click', () => {
+            const isPassword = apiKeyModalInput.type === 'password';
+            apiKeyModalInput.type = isPassword ? 'text' : 'password';
+            toggleApiKeyIcon.classList.toggle('fa-eye', !isPassword);
+            toggleApiKeyIcon.classList.toggle('fa-eye-slash', isPassword);
+        });
+
+        const resetForm = () => {
+            const form = formWizard;
+            const fieldsToClear = [
+                'business-name', 'industry', 'description', 
+                'audience-age-from', 'audience-age-to', 'audience-interests',
+                'product-focus-input', 'product-description',
+                'promotion-details', 'promotion-start-date', 'promotion-end-date'
+            ];
+
+            fieldsToClear.forEach(id => {
+                const el = getEl(id);
+                if (el) el.value = '';
+            });
+
+            form.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            form.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = (checkbox.id === 'platform-instagram' || checkbox.id === 'platform-tiktok');
+            });
+            productFocusToggle.checked = false;
+            productFocusFields.classList.add('hidden');
+            planDetailsContainer.classList.remove('hidden');
+            form.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = (radio.id === 'stage-awareness' || radio.id === 'mood-informative');
+            });
+
+            saveData();
+            
+            setDefaultDate();
+            currentStep = 1;
+            showStep(currentStep);
         };
 
-        const callGemini = async (prompt, isJson = false, apiKey) => {
+        resetBtn.addEventListener('click', resetForm);
+        
+        class InvalidApiKeyError extends Error {
+            constructor(message) {
+                super(message);
+                this.name = 'InvalidApiKeyError';
+            }
+        }
+
+        const plannerSchema = { type: "OBJECT", properties: { plan: { type: "ARRAY", items: { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] } } } };
+        const singleIdeaSchema = { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] };
+
+        const callGemini = async (prompt, isJson = false, apiKey, schema = null) => {
             if (!apiKey) {
                 throw new Error("Kunci API tidak ditemukan. Silakan masukkan kunci Anda.");
             }
@@ -832,30 +922,10 @@
             let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
             const payload = { contents: chatHistory };
             
-            if (isJson) {
+            if (isJson && schema) {
                 payload.generationConfig = {
                     responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            plan: {
-                                type: "ARRAY",
-                                items: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        day: { type: "STRING" },
-                                        platform: { type: "STRING" },
-                                        pillar: { type: "STRING" },
-                                        idea: { type: "STRING" },
-                                        caption_brief: { type: "STRING" },
-                                        visual_idea: { type: "STRING" },
-                                        hashtags: { type: "STRING" }
-                                    },
-                                    required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"]
-                                }
-                            }
-                        }
-                    }
+                    responseSchema: schema
                 };
             }
             
@@ -869,23 +939,133 @@
 
             if (!response.ok) {
                  const errorBody = await response.json().catch(() => response.text());
-                 if (response.status === 400 || response.status === 403 || (errorBody.error && errorBody.error.message.toLowerCase().includes('api key not valid'))) {
-                     userApiKey = null;
-                     await saveApiKeyToFirestore(null);
-                     throw new Error(`Kunci API tidak valid. Silakan coba lagi dengan kunci yang benar.`);
-                 }
+                if (response.status === 400 || response.status === 403 || (errorBody.error && errorBody.error.message.toLowerCase().includes('api key not valid'))) {
+                    userApiKey = null;
+                    await saveData();
+                    throw new InvalidApiKeyError(`Kunci API tidak valid atau izin ditolak. Kunci yang salah telah dihapus, silakan coba lagi dengan kunci yang benar.`);
+                }
                 throw new Error(`API error: ${response.status} ${response.statusText}. Body: ${JSON.stringify(errorBody)}`);
             }
             const result = await response.json();
-            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts.length > 0) {
+            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
                  const text = result.candidates[0].content.parts[0].text;
-                 return isJson ? JSON.parse(text) : text;
-            }
-             if (result.candidates && result.candidates[0].finishReason === "SAFETY") {
-                 throw new Error("Konten tidak dapat dibuat karena alasan keamanan. Coba ubah input Anda.");
+                 return JSON.parse(text);
             }
             throw new Error("Struktur respons dari AI tidak valid atau kosong.");
         };
+
+        const getFormInputs = (includeApiKey = false) => {
+            const isProductFocus = productFocusToggle.checked;
+            
+            const platforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
+            const contentMood = document.querySelector('input[name="content-mood"]:checked');
+            const businessStage = document.querySelector('input[name="business-stage"]:checked');
+
+            const audience = {
+                age_from: getEl('audience-age-from').value,
+                age_to: getEl('audience-age-to').value,
+                gender: getEl('audience-gender').value,
+                interests: getEl('audience-interests').value
+            };
+
+            let allInputs = {
+                'business-name': getEl('business-name').value,
+                'industry': getEl('industry').value,
+                'description': getEl('description').value,
+                'audience-age-from': audience.age_from,
+                'audience-age-to': audience.age_to,
+                'audience-gender': audience.gender,
+                'audience-interests': audience.interests,
+                'business-stage': businessStage ? businessStage.value : "Kesadaran",
+                'content-mood': contentMood ? contentMood.value : "Informatif dan Edukatif",
+                'platforms': platforms,
+                'start-date': getEl('start-date').value,
+                'duration': getEl('duration').value,
+                'product-focus-toggle': isProductFocus,
+                'product-focus-input': getEl('product-focus-input').value,
+                'product-description': getEl('product-description').value,
+                'promotion-details': getEl('promotion-details').value,
+                'promotion-start-date': getEl('promotion-start-date').value,
+                'promotion-end-date': getEl('promotion-end-date').value,
+            };
+
+            if (includeApiKey) {
+                allInputs.geminiApiKey = userApiKey;
+            }
+
+            const promptInputs = {
+                 isProductFocus: isProductFocus,
+                 audience: audience,
+                 contentMood: allInputs['content-mood'],
+                 businessStage: allInputs['business-stage'],
+                 platforms: allInputs.platforms,
+            }
+
+            if (isProductFocus) {
+                promptInputs.productName = allInputs['product-focus-input'];
+                promptInputs.productDescription = allInputs['product-description'];
+            } else {
+                promptInputs.businessName = allInputs['business-name'];
+                promptInputs.industry = allInputs['industry'];
+                promptInputs.description = allInputs['description'];
+                promptInputs.startDate = allInputs['start-date'];
+                promptInputs.duration = allInputs['duration'];
+                promptInputs.promoDetails = allInputs['promotion-details'];
+                promptInputs.promoStart = allInputs['promotion-start-date'];
+                promptInputs.promoEnd = allInputs['promotion-end-date'];
+            }
+
+            return includeApiKey ? allInputs : promptInputs;
+        };
+        
+        const buildPlannerPrompt = (inputs) => {
+            const audienceDescription = `Usia dari ${inputs.audience.age_from || 'tidak spesifik'} sampai ${inputs.audience.age_to || 'tidak spesifik'}, Jenis Kelamin ${inputs.audience.gender || 'semua'}, dengan minat pada ${inputs.audience.interests || 'tidak spesifik'}.`;
+            const platformList = inputs.platforms.join(', ');
+
+            let stageInstruction = '';
+            switch (inputs.businessStage) {
+                case "Kesadaran":
+                    stageInstruction = "Fokus utama adalah menjangkau audiens baru dan membangun brand awareness. Buat konten yang memperkenalkan brand, menjelaskan masalah yang produk Anda selesaikan, dan konten edukatif atau hiburan yang ringan untuk menarik perhatian.";
+                    break;
+                case "Interaksi":
+                    stageInstruction = "Fokus utama adalah membangun interaksi dan kepercayaan dengan audiens yang sudah mengenal Anda. Buat konten yang menampilkan testimoni, studi kasus, perbandingan produk, dan ajak audiens berdiskusi (Q&A, polling).";
+                    break;
+                case "Loyalitas":
+                    stageInstruction = "Fokus utama adalah mengubah pelanggan menjadi penggemar setia dan membangun komunitas. Buat konten di balik layar (behind the scenes), tonjolkan user-generated content (UGC), dan umumkan program loyalitas.";
+                    break;
+            }
+
+            const platformInstruction = `Setiap ide dalam rencana harus secara spesifik ditujukan untuk SALAH SATU platform dari daftar yang dipilih: ${platformList}. Alokasikan ide ke platform yang paling sesuai. Contoh: Ide video singkat untuk TikTok/Instagram Reels, ide gambar berkualitas tinggi atau carousel untuk Instagram, ide berbasis komunitas/teks untuk Facebook. Jangan membuat ide umum, tapi buatlah ide yang dioptimalkan untuk format setiap platform.`;
+
+            if (inputs.isProductFocus) {
+                return `Buat 5 ide konten yang berbeda dan kreatif untuk mempromosikan satu produk spesifik: "${inputs.productName}".
+                Deskripsi produk: "${inputs.productDescription}".
+                Target audiens: "${audienceDescription}".
+                Pembawaan suasana: "${inputs.contentMood}".
+                Tujuan Konten: "${inputs.businessStage}".
+                INSTRUKSI PLATFORM: ${platformInstruction}
+                INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
+                Berikan ide dari berbagai sudut pandang (edukasi, testimoni, promosi, interaksi, dll) yang sesuai dengan tujuan konten tersebut. Hasilkan dalam format JSON dengan skema 'plan', gunakan "Ide 1", "Ide 2", dst. untuk field 'day'.`;
+            }
+
+            let focusInstruction = "Berikan kombinasi pilar konten yang seimbang (Edukasi, Promosi, Hiburan, Interaksi) yang sesuai dengan tujuan konten.";
+            if (inputs.promoDetails && inputs.promoStart && inputs.promoEnd) {
+                focusInstruction = `Ada promosi khusus yang sedang berjalan: "${inputs.promoDetails}" dari tanggal ${inputs.promoStart} hingga ${inputs.promoEnd}. Prioritaskan beberapa ide konten untuk promosi ini, sambil tetap menjaga keseimbangan pilar konten.`;
+            }
+            
+            const moodInstruction = `Gunakan pembawaan suasana yang ${inputs.contentMood} dalam semua ide dan draf caption.`;
+            const startDateInstruction = inputs.startDate ? `Mulai rencana pada tanggal ${inputs.startDate}.` : '';
+
+            return `Anda adalah ahli strategi sosial media. Buat rencana konten untuk ${inputs.duration} hari untuk bisnis: Nama: "${inputs.businessName}", Industri: "${inputs.industry}", Deskripsi: "${inputs.description}", Audiens: "${audienceDescription}".
+            INSTRUKSI UTAMA: Rencana harus disesuaikan untuk mencapai tujuan **${inputs.businessStage}**.
+            INSTRUKSI PLATFORM: ${platformInstruction}
+            INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
+            INSTRUKSI TANGGAL: ${startDateInstruction} Gunakan tanggal kalender aktual (misalnya, '25 Juni 2025') untuk field 'day' dalam JSON, bukan 'Hari 1'.
+            INSTRUKSI FOKUS: ${focusInstruction}
+            INSTRUKSI SUASANA: ${moodInstruction}
+            Hasilkan dalam format JSON sesuai skema.`;
+        }
+
 
         const renderResults = (data, container, draft = null) => {
             container.innerHTML = '';
@@ -893,13 +1073,14 @@
                 container.innerHTML = `<p class="col-span-full text-center">Tidak ada data untuk ditampilkan.</p>`;
                 return;
             }
-            data.forEach((item) => {
+            data.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'bg-white rounded-xl p-5 flex flex-col h-full shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 transition-shadow duration-300 border border-slate-200';
+                card.className = 'bg-white rounded-xl p-5 flex flex-col h-full shadow-lg shadow-slate-200/50 hover:shadow-xl hover:shadow-slate-300/50 transition-shadow duration-300 border border-slate-200 relative';
+                card.dataset.index = index; 
                 const platformIcon = getPlatformIcon(item.platform);
                 
                 card.innerHTML = `
-                    <div class="flex-grow space-y-4">
+                    <div class="card-content-wrapper space-y-4 flex-grow">
                         <div class="flex justify-between items-start">
                             <span class="text-sm font-bold uppercase text-slate-500 tracking-wider">${item.day}</span>
                             <span class="text-2xl">${platformIcon}</span>
@@ -918,14 +1099,21 @@
                             <p class="text-sm text-slate-600">${item.visual_idea || 'N/A'}</p>
                         </div>
                     </div>
-                    <div class="mt-auto pt-4">
-                        <button class="get-ai-result-btn w-full bg-blue-50 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm">
-                             <i class="fas fa-robot mr-2"></i>Hasil AI
+                    <div class="mt-auto pt-4 flex flex-wrap gap-2">
+                        <button class="get-ai-result-btn flex-grow bg-blue-50 text-blue-700 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition-colors text-sm">
+                            <i class="fas fa-robot mr-2"></i>Hasil AI
+                        </button>
+                        <button class="add-to-calendar-btn flex-grow bg-green-50 text-green-700 font-semibold py-2 px-4 rounded-lg hover:bg-green-100 transition-colors text-sm">
+                            <i class="fas fa-calendar-plus mr-2"></i>Jadwalkan
+                        </button>
+                        <button class="regenerate-idea-btn w-full mt-2 bg-purple-50 text-purple-700 font-semibold py-2 px-4 rounded-lg hover:bg-purple-100 transition-colors text-sm">
+                            <i class="fas fa-sync-alt mr-2"></i>Buat Ulang Ide
                         </button>
                     </div>
                 `;
-
                 card.querySelector('.get-ai-result-btn').addEventListener('click', () => handleDevelopCaption(item, draft));
+                card.querySelector('.add-to-calendar-btn').addEventListener('click', () => showCalendarModal(item));
+                card.querySelector('.regenerate-idea-btn').addEventListener('click', (e) => handleRegenerateIdea(index, e.currentTarget.closest('.bg-white'), container, draft));
                 container.appendChild(card);
             });
         };
@@ -937,15 +1125,76 @@
             if (p.includes('facebook')) return '<i class="fab fa-facebook text-blue-600"></i>';
             return '<i class="fas fa-bullhorn"></i>';
         };
+
+        const buildRegeneratePrompt = (itemToReplace) => {
+            const contextInputs = currentInputs; // Use currentInputs which is set for main results or drafts
+            const audienceDescription = `Usia dari ${contextInputs.audience.age_from || 'tidak spesifik'} sampai ${contextInputs.audience.age_to || 'tidak spesifik'}, Jenis Kelamin ${contextInputs.audience.gender || 'semua'}, dengan minat pada ${contextInputs.audience.interests || 'tidak spesifik'}.`;
+            const baseInfo = contextInputs.isProductFocus 
+                ? `untuk produk "${contextInputs.productName}" (${contextInputs.productDescription})` 
+                : `untuk bisnis "${contextInputs.businessName}" di industri "${contextInputs.industry}"`;
+
+            return `Anda adalah ahli strategi sosial media. Saya butuh satu ide konten BARU untuk menggantikan ide yang sudah ada.
+            
+            Konteks Bisnis: ${baseInfo}
+            Target Audiens: ${audienceDescription}
+            Tujuan Konten: ${contextInputs.businessStage}
+            Suasana Konten: ${contextInputs.contentMood}
+            Platform: ${itemToReplace.platform}
+
+            Ide yang akan diganti adalah: "${itemToReplace.idea}" (Pilar: ${itemToReplace.pillar}).
+
+            Tugas Anda:
+            1. Buat satu ide konten yang SANGAT BERBEDA dari ide yang akan diganti.
+            2. Ide baru harus tetap sesuai dengan semua konteks (audiens, tujuan, suasana, platform).
+            3. Jaga agar tanggal/hari ('day') tetap sama: "${itemToReplace.day}".
+            4. Hasilkan dalam format JSON tunggal (bukan dalam array 'plan'), sesuai dengan skema yang diberikan.`;
+        }
+
+        const handleRegenerateIdea = async (index, cardElement, container, draft) => {
+            // Determine which data source to use
+            let dataArray = draft ? draft.planData : generatedData;
+            const itemToReplace = dataArray[index];
+            
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.className = 'card-loading-overlay';
+            loadingOverlay.innerHTML = `<i class="fas fa-spinner fa-spin text-3xl text-purple-500"></i>`;
+            cardElement.appendChild(loadingOverlay);
+
+            try {
+                const prompt = buildRegeneratePrompt(itemToReplace);
+                const newIdea = await callGemini(prompt, true, userApiKey, singleIdeaSchema);
+                
+                // Replace the old item in the correct array
+                dataArray[index] = newIdea;
+                
+                // If it's a draft, update it in localStorage
+                if (draft) {
+                    let drafts = getDrafts();
+                    const draftIndex = drafts.findIndex(d => d.id === draft.id);
+                    if (draftIndex !== -1) {
+                        drafts[draftIndex].planData = dataArray;
+                        saveDrafts(drafts);
+                    }
+                }
+
+                // Re-render the cards in the correct container
+                renderResults(dataArray, container, draft);
+
+            } catch (error) {
+                console.error('Error regenerating idea:', error);
+                showErrorModal(error.message || "Gagal membuat ulang ide. Silakan coba lagi.");
+                cardElement.removeChild(loadingOverlay); // Ensure overlay is removed on error
+            }
+        };
         
         const handleDevelopCaption = async (item, draft = null) => {
             const isDraftContext = draft !== null;
-            const modalToShow = isDraftContext ? draftAiResultModal : captionModal;
-            const loadingToShow = isDraftContext ? draftCaptionLoading : getEl('caption-loading');
-            const contentToShow = isDraftContext ? getEl('draft-caption-content') : getEl('caption-content');
+            const modalToShow = isDraftContext ? getEl('draft-ai-result-modal') : captionModal;
+            const loadingToShow = isDraftContext ? getEl('draft-caption-loading') : captionLoading;
+            const contentToShow = isDraftContext ? getEl('draft-caption-content') : captionContent;
             
-            if (item.aiResultHtml) {
-                contentToShow.innerHTML = item.aiResultHtml;
+            if (item.aiResultJson) {
+                contentToShow.innerHTML = renderAiResultFromJSON(item.aiResultJson);
                 loadingToShow.classList.add('hidden');
                 contentToShow.classList.remove('hidden');
                 modalToShow.classList.remove('hidden');
@@ -958,236 +1207,276 @@
             loadingToShow.classList.remove('hidden');
             
             try {
-                const prompt = buildPlannerPrompt(item);
-                const resultText = await callGemini(prompt, false, userApiKey);
-                const htmlResult = formatToHtml(resultText);
+                const prompt = buildCaptionPrompt(item);
+                const resultJson = await callGemini(prompt, true, userApiKey, captionSchema);
+                const htmlResult = renderAiResultFromJSON(resultJson);
                 contentToShow.innerHTML = htmlResult;
+                item.aiResultJson = resultJson;
 
-                item.aiResultHtml = htmlResult; 
-
-                if (isDraftContext) {
-                    const allDrafts = await getDrafts();
+                if (draft) {
+                    const allDrafts = getDrafts();
                     const draftIndex = allDrafts.findIndex(d => d.id === draft.id);
                     if (draftIndex > -1) {
+                        // Find the specific item in the planData and update it
                         const itemIndex = allDrafts[draftIndex].planData.findIndex(p => p.idea === item.idea && p.day === item.day);
-                        if(itemIndex > -1) {
-                           allDrafts[draftIndex].planData[itemIndex].aiResultHtml = htmlResult;
+                        if(itemIndex > -1){
+                            allDrafts[draftIndex].planData[itemIndex] = item;
                         }
-                        await saveDrafts(allDrafts);
+                        saveDrafts(allDrafts);
                     }
                 }
             } catch (error) {
-                contentToShow.innerHTML = `<p class="text-red-500">Gagal mengembangkan ide: ${error.message}</p>`;
+                contentToShow.innerHTML = `<p class="text-red-500">${error.message}</p>`;
+                 if (error instanceof InvalidApiKeyError) {
+                    modalToShow.classList.add('hidden');
+                    apiKeyModal.classList.remove('hidden');
+                }
             } finally {
                 loadingToShow.classList.add('hidden');
                 contentToShow.classList.remove('hidden');
             }
         };
-
-        const updateStepIndicators = () => { for (let i = 1; i <= totalSteps; i++) { const indicator = getEl(`step-indicator-${i}`); indicator.classList.remove('active', 'completed'); if (i < currentStep) { indicator.classList.add('completed'); } else if (i === currentStep) { indicator.classList.add('active'); } } };
-        const updateButtons = () => { prevBtn.disabled = currentStep === 1; if (currentStep === totalSteps) { nextBtn.classList.add('hidden'); generateBtn.classList.remove('hidden'); } else { nextBtn.classList.remove('hidden'); generateBtn.classList.add('hidden'); } };
-        const showStep = (step) => { document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active')); getEl(`step-${step}`).classList.add('active'); updateButtons(); updateStepIndicators(); };
-        const showLoading = () => { formWizard.classList.add('hidden'); loadingEl.classList.remove('hidden'); resultsEl.classList.add('hidden'); };
-        const hideLoading = () => { loadingEl.classList.add('hidden'); };
-        const resetToFormView = () => { loadingEl.classList.add('hidden'); resultsEl.classList.add('hidden'); saveDraftBtn.classList.add('hidden'); formWizard.classList.remove('hidden'); };
-        const startOver = () => { resetToFormView(); resetForm(); };
         
-        const formatToHtml = (text) => { 
-            return text
-                .replace(/### (.*?)\n/g, '<h4>$1</h4>')
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/^\* (.*$)/gm, '<li>$1</li>')
-                .replace(/(<\/li>)\s*\n(<li>)/g, '$1$2')
-                .replace(/((<li>.*<\/li>\s*)+)/gs, '<ul>$1</ul>')
-                .replace(/```([^`]+)```/gs, '<blockquote>$1</blockquote>')
-                .replace(/\n/g, '<br>')
-                .replace(/<br><ul>/g, '<ul>')
-                .replace(/<\/ul><br>/g, '</ul>')
-                .replace(/<br><h4>/g, '<h4>')
-                .replace(/<br><br>/g, '<br>'); 
-        };
-        
-        const buildCaptionPrompt = (item) => { 
-            const businessNameToUse = (currentInputs && currentInputs['business-name']) || getEl('business-name').value || 'bisnis ini';
-            const promptStructure = `\n### CONTOH CAPTION LENGKAP\n{Tulis caption lengkap di sini. Pastikan menyertakan emoji yang relevan dan call to action yang jelas. Tambahkan juga daftar hashtag yang sudah dibuat.}\n\n### SARAN VISUAL / SKRIP VIDEO\n{Tulis detail visual atau skrip video di sini. Jika video, berikan detail adegan per adegan.}\n\n### SARAN HASHTAG\n${item.hashtags || '#BrandAnda #TopikTerkait'}\n`; 
-            return `Anda adalah seorang copywriter sosial media ahli. Kembangkan draf konten berikut menjadi aset siap pakai untuk bisnis "${businessNameToUse}" (tujuan: ${currentInputs['business-stage'] || 'Tidak spesifik'}) dengan pembawaan suasana **${currentInputs['content-mood'] || 'Netral'}**.\n            DETAIL IDE: Platform: ${item.platform}, Ide: ${item.idea}, Draf Caption: ${item.caption_brief}, Draf Visual: ${item.visual_idea}\n            TUGAS ANDA: Buat konten detail berdasarkan ide di atas. Balas HANYA dalam format Markdown yang telah ditentukan di bawah. JANGAN tambahkan teks lain di luar struktur.\n            ${promptStructure}`; 
-        };
-        
-        const copyTextFromModal = (contentElement, buttonElement, originalText) => { 
-            const textToCopy = contentElement.innerText; 
-            const textArea = document.createElement("textarea"); 
-            textArea.value = textToCopy; 
-            textArea.style.position = "fixed"; 
-            textArea.style.top = "-9999px"; 
-            document.body.appendChild(textArea); 
-            textArea.select(); 
-            try { 
-                document.execCommand('copy'); 
-                buttonElement.innerHTML = '<i class="fas fa-check mr-2"></i>Tersalin!'; 
-            } catch (err) { 
-                console.error('Gagal menyalin teks', err); 
-                buttonElement.innerHTML = '<i class="fas fa-times mr-2"></i>Gagal!'; 
-            } 
-            document.body.removeChild(textArea); 
-            setTimeout(() => {  
-                buttonElement.innerHTML = `<i class="fas fa-copy mr-2"></i>${originalText}`; 
-            }, 2000); 
-        };
-        const showErrorModal = (message) => { 
-            errorMessage.innerHTML = message || `Maaf, terjadi masalah. Silakan periksa koneksi Anda dan coba lagi.`; 
-            errorModal.classList.remove('hidden'); 
-        };
-        
-        const resetForm = () => { 
-            const fieldsToClear = [ 'business-name', 'industry', 'description', 'audience-age-from', 'audience-age-to', 'audience-interests', 'product-focus-input', 'product-description', 'promotion-details', 'promotion-start-date', 'promotion-end-date' ]; 
-            fieldsToClear.forEach(id => { 
-                const el = getEl(id); 
-                if (el) el.value = ''; 
-            }); 
-            formWizard.querySelectorAll('select').forEach(select => select.selectedIndex = 0); 
-            formWizard.querySelectorAll('input[type="checkbox"]').forEach(checkbox => { checkbox.checked = (checkbox.id === 'platform-instagram' || checkbox.id === 'platform-tiktok'); }); 
-            productFocusToggle.checked = false; 
-            productFocusFields.classList.add('hidden'); 
-            planDetailsContainer.classList.remove('hidden'); 
-            formWizard.querySelectorAll('input[type="radio"]').forEach(radio => { radio.checked = (radio.id === 'stage-awareness' || radio.id === 'mood-informative'); }); 
-            saveFormDataToFirestore(); 
-            setDefaultDate(); 
-            currentStep = 1; 
-            showStep(currentStep); 
-        };
-        
-        const getFormInputs = () => { 
-            const isProductFocus = productFocusToggle.checked; 
-            const platforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value); 
-            const contentMood = document.querySelector('input[name="content-mood"]:checked'); 
-            const businessStage = document.querySelector('input[name="business-stage"]:checked'); 
-            const audience = { age_from: getEl('audience-age-from').value, age_to: getEl('audience-age-to').value, gender: getEl('audience-gender').value, interests: getEl('audience-interests').value }; 
-            let allInputs = { 
-                'business-name': getEl('business-name').value, 
-                'industry': getEl('industry').value, 
-                'description': getEl('description').value, 
-                'audience-age-from': audience.age_from, 
-                'audience-age-to': audience.age_to, 
-                'audience-gender': audience.gender, 
-                'audience-interests': audience.interests, 
-                'business-stage': businessStage ? businessStage.value : "Kesadaran", 
-                'content-mood': contentMood ? contentMood.value : "Informatif dan Edukatif", 
-                'platforms': platforms, 'start-date': getEl('start-date').value, 
-                'duration': getEl('duration').value, 
-                'product-focus-toggle': isProductFocus, 
-                'product-focus-input': getEl('product-focus-input').value, 
-                'product-description': getEl('product-description').value, 
-                'promotion-details': getEl('promotion-details').value, 
-                'promotion-start-date': getEl('promotion-start-date').value, 
-                'promotion-end-date': getEl('promotion-end-date').value, 
-            }; 
-            return allInputs; 
+        const renderAiResultFromJSON = (data) => {
+            let html = '';
+            if (data.fullCaption) { html += `<h4>Caption Lengkap</h4><p>${data.fullCaption.replace(/\n/g, '<br>')}</p>`; }
+            if (data.visualSuggestion) { html += `<h4 class="mt-4">Saran Visual</h4><p>${data.visualSuggestion}</p>`; }
+            if (data.videoScript && data.videoScript.length > 0) { html += `<h4 class="mt-4">Skrip Video</h4><ul>${data.videoScript.map(s => `<li>${s}</li>`).join('')}</ul>`; }
+            if (data.hashtags && data.hashtags.length > 0) { html += `<h4 class="mt-4">Saran Hashtag</h4><p class="text-sm text-blue-600">${data.hashtags.join(' ')}</p>`; }
+            return html;
         };
 
-        const buildPlannerPrompt = (inputs) => { 
-            const audienceDescription = `Usia dari ${inputs['audience-age-from'] || 'tidak spesifik'} sampai ${inputs['audience-age-to'] || 'tidak spesifik'}, Jenis Kelamin ${inputs['audience-gender'] || 'semua'}, dengan minat pada ${inputs['audience-interests'] || 'tidak spesifik'}.`; 
-            let stageInstruction = ''; 
-            switch (inputs['business-stage']) { 
-                case "Kesadaran": stageInstruction = "Fokus utama adalah menjangkau audiens baru dan membangun brand awareness..."; break; 
-                case "Interaksi": stageInstruction = "Fokus utama adalah membangun interaksi dan kepercayaan..."; break; 
-                case "Loyalitas": stageInstruction = "Fokus utama adalah mengubah pelanggan menjadi penggemar setia..."; break; 
-            } 
-            if (inputs['product-focus-toggle']) { 
-                return `Buat 5 ide konten yang berbeda dan kreatif untuk mempromosikan satu produk spesifik: "${inputs['product-focus-input']}". Deskripsi produk: "${inputs['product-description']}". Target audiens: "${audienceDescription}". Pembawaan suasana: "${inputs['content-mood']}". Platform: "${inputs.platforms.join(', ')}". Tujuan Konten: "${inputs['business-stage']}". INSTRUKSI TUJUAN KONTEN: ${stageInstruction} Berikan ide dari berbagai sudut pandang (edukasi, testimoni, promosi, interaksi, dll) yang sesuai dengan tujuan konten tersebut. Hasilkan dalam format JSON dengan skema 'plan', gunakan "Ide 1", "Ide 2", dst. untuk field 'day'. Pastikan untuk membuat saran hashtag yang relevan dan spesifik.`; 
-            } 
-            let focusInstruction = ''; 
-            if (inputs['promotion-details'] && inputs['promotion-start-date'] && inputs['promotion-end-date']) { 
-                focusInstruction = `Ada promosi khusus yang sedang berjalan: "${inputs['promotion-details']}" dari tanggal ${inputs['promotion-start-date']} hingga ${inputs['promotion-end-date']}. Prioritaskan beberapa ide konten untuk promosi ini.`; 
-            } else { 
-                focusInstruction = "Berikan kombinasi pilar konten yang seimbang (Edukasi, Promosi, Hiburan, Interaksi) yang sesuai dengan tujuan konten."; 
-            } 
-            const moodInstruction = `Gunakan pembawaan suasana yang ${inputs['content-mood']} dalam semua ide dan draf caption.`; 
-            const startDateInstruction = inputs['start-date'] ? `Mulai rencana pada tanggal ${inputs['start-date']}.` : ''; 
-            return `Anda adalah ahli strategi sosial media. Buat rencana konten untuk ${inputs['duration']} hari untuk bisnis: Nama: "${inputs['business-name']}", Industri: "${inputs['industry']}", Deskripsi: "${inputs['description']}", Audiens: "${audienceDescription}", Platform: "${inputs.platforms.join(', ')}". INSTRUKSI UTAMA: Rencana harus disesuaikan untuk mencapai tujuan **${inputs['business-stage']}**. INSTRUKSI TUJUAN KONTEN: ${stageInstruction} INSTRUKSI TANGGAL: ${startDateInstruction} Gunakan tanggal kalender aktual (misalnya, '21 Juni 2025') untuk field 'day' dalam JSON, bukan 'Hari 1'. INSTRUKSI FOKUS: ${focusInstruction} INSTRUKSI SUASANA: ${moodInstruction} Fokus pada 3 pilar utama untuk setiap ide: Ide, Caption, dan Visual. Berikan juga kategori (pillar) dan saran hashtags yang relevan dan spesifik. Hasilkan dalam format JSON sesuai skema.`; 
+        const captionSchema = { type: "OBJECT", properties: { fullCaption: { type: "STRING" }, visualSuggestion: { type: "STRING" }, videoScript: { type: "ARRAY", items: { type: "STRING" } }, hashtags: { type: "ARRAY", items: { type: "STRING" } } }, required: ["fullCaption", "visualSuggestion", "videoScript", "hashtags"] };
+
+        const buildCaptionPrompt = (item) => {
+            const audienceDescription = `Usia ${currentInputs.audience.age_from || 'tidak spesifik'} - ${currentInputs.audience.age_to || 'tidak spesifik'} tahun, Jenis Kelamin: ${currentInputs.audience.gender}, Minat: ${currentInputs.audience.interests || 'tidak spesifik'}`;
+            let promoInfo = "Tidak ada promosi khusus saat ini.";
+            if (currentInputs.promoDetails) {
+                promoInfo = `Saat ini ada promosi: "${currentInputs.promoDetails}".`;
+            }
+
+            return `Anda adalah seorang copywriter dan ahli strategi media sosial. Tugas Anda adalah mengembangkan brief konten berikut menjadi caption yang lengkap, menarik, dan siap untuk dipublikasikan.
+
+**Konteks Bisnis & Tujuan Utama:**
+- **Nama Bisnis:** ${currentInputs.businessName || 'Bisnis ini'}
+- **Deskripsi Bisnis:** ${currentInputs.description || 'Tidak ada deskripsi.'}
+- **Target Audiens:** ${audienceDescription}
+- **Tujuan Utama Konten:** ${currentInputs.businessStage}. Ini berarti fokusnya adalah pada ${currentInputs.businessStage === 'Kesadaran' ? 'memperkenalkan brand dan menjangkau audiens baru.' : currentInputs.businessStage === 'Interaksi' ? 'membangun hubungan dan kepercayaan.' : 'mempertahankan pelanggan dan membangun komunitas.'}
+- **Pembawaan Suasana (Tone of Voice):** ${currentInputs.contentMood}
+
+**Informasi Promosi (Jika Ada):**
+- ${promoInfo}
+
+**Brief Konten Spesifik yang Harus Dikembangkan:**
+- **Platform:** ${item.platform}
+- **Ide Inti:** ${item.idea}
+- **Draf Awal Caption:** ${item.caption_brief}
+- **Ide Visual:** ${item.visual_idea}
+
+**Tugas Anda:**
+1.  **fullCaption:** Tulis caption lengkap dan menarik berdasarkan brief di atas. Gunakan ${currentInputs.contentMood} sebagai gaya bahasa. Akhiri dengan Call-To-Action (CTA) yang jelas dan sesuai dengan tujuan konten (${currentInputs.businessStage}). Jika ada promosi, sebutkan dengan jelas.
+2.  **visualSuggestion:** Berikan deskripsi yang lebih detail untuk ide visual. Jelaskan elemen-elemen kunci yang harus ada, komposisi, atau nuansa visualnya.
+3.  **videoScript:** Jika ide visual adalah video (misal: Reels, TikTok), tuliskan skrip sederhana (maksimal 3-4 adegan/poin). Jika bukan video, kembalikan array kosong.
+4.  **hashtags:** Berikan daftar hashtag yang relevan, campurkan antara hashtag populer dan niche. Sertakan juga hashtag brand jika memungkinkan.
+
+Balas HANYA dengan objek JSON yang valid sesuai skema yang diberikan.`;
         };
 
-        const handleExportPDF = () => { 
-            if (generatedData.length === 0) return; 
-            const { jsPDF } = window.jspdf; 
-            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' }); 
-            doc.setFont('Helvetica'); 
-            const head = [['Hari/Tgl', 'Platform', 'Pilar', 'Ide Pokok', 'Draf Caption', 'Saran Visual']]; 
-            const body = generatedData.map(item => [ item.day, item.platform, item.pillar, item.idea, item.caption_brief, item.visual_idea, ]); 
-            doc.setFontSize(18); 
-            doc.text(getEl('results-title').textContent, 15, 20); 
-            doc.setFontSize(11); 
-            doc.setTextColor(100); 
-            doc.text(getEl('results-subtitle').textContent, 15, 27); 
-            doc.autoTable({ startY: 32, head: head, body: body, theme: 'striped', headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold', }, styles: { fontSize: 8, cellPadding: 2, font: 'Helvetica' }, alternateRowStyles: { fillColor: [245, 245, 245] }, columnStyles: { 0: { cellWidth: 20 }, 1: { cellWidth: 20 }, 2: { cellWidth: 20 }, 3: { cellWidth: 'auto' }, 4: { cellWidth: 'auto' }, 5: { cellWidth: 'auto' }, }, }); 
-            doc.save('rencana_konten.pdf'); 
+        
+        closeCaptionModalBtn.addEventListener('click', () => captionModal.classList.add('hidden'));
+
+        copyCaptionBtn.addEventListener('click', () => { copyTextFromModal(captionContent, copyCaptionBtn, "Salin Teks"); });
+        if (copyDraftCaptionBtn) { copyDraftCaptionBtn.addEventListener('click', () => { copyTextFromModal(draftCaptionContent, copyDraftCaptionBtn, "Salin Teks"); }); }
+
+        const copyTextFromModal = (contentElement, buttonElement, originalText) => {
+            const textToCopy = contentElement.innerText;
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            textArea.style.position = "fixed"; textArea.style.top = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                buttonElement.innerHTML = '<i class="fas fa-check mr-2"></i>Tersalin!';
+            } catch (err) {
+                console.error('Gagal menyalin teks', err);
+                buttonElement.innerHTML = '<i class="fas fa-times mr-2"></i>Gagal!';
+            }
+            document.body.removeChild(textArea);
+            setTimeout(() => { 
+                buttonElement.innerHTML = `<i class="fas fa-copy mr-2"></i>${originalText}`;
+            }, 2000);
         };
 
-        const handleExportCSV = () => { 
-            if (generatedData.length === 0) return; 
-            const headerMapping = { day: "Hari/Tanggal", platform: "Platform", pillar: "Pilar Konten", idea: "Ide Pokok", caption_brief: "Draf Caption", visual_idea: "Saran Visual", hashtags: "Saran Hashtag" }; 
-            const headerKeys = Object.keys(headerMapping); 
-            const headerTitles = Object.values(headerMapping); 
-            const csvRows = [headerTitles.join(',')]; 
-            generatedData.forEach(row => { const values = headerKeys.map(key => `"${(row[key] || '').replace(/"/g, '""')}"`); csvRows.push(values.join(',')); }); 
-            const csvString = "\uFEFF" + csvRows.join('\n'); 
-            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' }); 
-            const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'rencana_konten_ai.csv'; document.body.appendChild(a); a.click(); document.body.removeChild(a); 
+
+        const showErrorModal = (message) => {
+            errorMessage.textContent = message || `Maaf, terjadi masalah. Silakan periksa koneksi Anda dan coba lagi.`;
+            errorModal.classList.remove('hidden');
+        };
+        closeErrorModalBtn.addEventListener('click', () => errorModal.classList.add('hidden'));
+
+        const resetToFormView = () => {
+            loadingEl.classList.add('hidden');
+            resultsEl.classList.add('hidden');
+             if(saveDraftBtn) saveDraftBtn.classList.add('hidden');
+            formWizard.classList.remove('hidden');
+        };
+
+        const startOver = () => {
+            resetToFormView();
+            resetForm();
+        };
+
+        restartBtn.addEventListener('click', startOver);
+        
+        // --- PDF & CSV EXPORT ---
+        const handleExportPDF = (dataToExport, title, subtitle) => {
+            if (!dataToExport || dataToExport.length === 0) {
+                showErrorModal("Tidak ada data untuk diekspor.");
+                return;
+            }
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+            doc.setFontSize(18);
+            doc.text(title, 15, 20);
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(subtitle, 15, 27);
+
+            const summaryHead = [['Hari/Tgl', 'Platform', 'Pilar', 'Ide Pokok']];
+            const summaryBody = dataToExport.map(item => [item.day || '', item.platform || '', item.pillar || '', item.idea || '']);
+            doc.autoTable({
+                startY: 35, head: summaryHead, body: summaryBody,
+                theme: 'striped', headStyles: { fillColor: [41, 128, 185], textColor: 255, fontStyle: 'bold' },
+                styles: { fontSize: 9, cellPadding: 2.5, font: 'helvetica' },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+            });
+
+            const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            doc.save(`Rencana_Konten_${sanitizedTitle}.pdf`);
+        };
+
+        const handleExportCSV = (dataToExport, title) => {
+            if (!dataToExport || dataToExport.length === 0) {
+                showErrorModal("Tidak ada data untuk diekspor.");
+                return;
+            }
+            const headerMapping = { day: "Hari/Tanggal", platform: "Platform", pillar: "Pilar Konten", idea: "Ide Pokok", caption_brief: "Draf Caption", visual_idea: "Saran Visual", hashtags: "Saran Hashtag" };
+            const headerKeys = Object.keys(headerMapping);
+            const headerTitles = Object.values(headerMapping);
+            const csvRows = [headerTitles.join(',')];
+            dataToExport.forEach(row => {
+                const values = headerKeys.map(key => `"${(row[key] || '').replace(/"/g, '""')}"`);
+                csvRows.push(values.join(','));
+            });
+            const csvString = "\uFEFF" + csvRows.join('\n');
+            const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const sanitizedTitle = title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            a.download = `Rencana_Konten_${sanitizedTitle}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         };
         
-        const setDefaultDate = () => { 
-            const startDateInput = getEl('start-date'); 
-            const today = new Date(); 
-            const year = today.getFullYear(); 
-            const month = String(today.getMonth() + 1).padStart(2, '0'); 
-            const day = String(today.getDate()).padStart(2, '0'); 
-            if(!startDateInput.value){  startDateInput.value = `${year}-${month}-${day}`; } 
-            startDateInput.min = `${year}-${month}-${day}`; 
-            getEl('promotion-start-date').value = ''; 
-            getEl('promotion-end-date').value = ''; 
+        exportPdfBtn.addEventListener('click', () => handleExportPDF(generatedData, resultsTitle.textContent, resultsSubtitle.textContent));
+        exportCsvBtn.addEventListener('click', () => handleExportCSV(generatedData, resultsTitle.textContent));
+        
+        // --- CALENDAR INTEGRATION LOGIC ---
+        const calendarModal = getEl('calendar-modal');
+        const closeCalendarModalBtn = getEl('close-calendar-modal');
+        const googleCalendarBtn = getEl('google-calendar-btn');
+        const icsDownloadBtn = getEl('ics-download-btn');
+        const monthMap = { "januari": 0, "februari": 1, "maret": 2, "april": 3, "mei": 4, "juni": 5, "juli": 6, "agustus": 7, "september": 8, "oktober": 9, "november": 10, "desember": 11 };
+        const parseDateString = (dateStr) => {
+            if (!dateStr || dateStr.toLowerCase().startsWith('ide')) return null;
+            const parts = dateStr.split(" ");
+            if (parts.length !== 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = monthMap[parts[1].toLowerCase()];
+            const year = parseInt(parts[2], 10);
+            if (isNaN(day) || month === undefined || isNaN(year)) return null;
+            return new Date(year, month, day, 9, 0, 0);
+        };
+        const formatToUTC = (date) => date ? date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') : '';
+        const showCalendarModal = (item) => { currentCalendarItem = item; calendarModal.classList.remove('hidden'); };
+        const generateGoogleCalendarLink = () => {
+             if (!currentCalendarItem) return;
+             const item = currentCalendarItem;
+             const startDate = parseDateString(item.day);
+             if (!startDate) { showErrorModal("Tanggal tidak valid."); return; }
+             const endDate = new Date(startDate.getTime() + 3600000); // 1 hour
+             const title = encodeURIComponent(`Konten: ${item.platform} - ${item.idea}`);
+             const details = encodeURIComponent(`Rencana Konten:\n\nIde: ${item.idea}\nPlatform: ${item.platform}\nPilar: ${item.pillar}\n\nBrief Caption:\n${item.caption_brief}\n\nSaran Visual:\n${item.visual_idea}\n\nHashtags:\n${item.hashtags}`);
+             const dates = `${formatToUTC(startDate)}/${formatToUTC(endDate)}`;
+             const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${item.platform}`;
+             window.open(url, '_blank');
+             calendarModal.classList.add('hidden');
+        };
+        const generateIcsFile = () => {
+            if (!currentCalendarItem) return;
+            const item = currentCalendarItem;
+            const startDate = parseDateString(item.day);
+            if (!startDate) { showErrorModal("Tanggal tidak valid."); return; }
+            const endDate = new Date(startDate.getTime() + 3600000);
+            
+            const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//gemini-planner//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:${crypto.randomUUID()}@gemini.planner
+DTSTAMP:${formatToUTC(new Date())}
+DTSTART:${formatToUTC(startDate)}
+DTEND:${formatToUTC(endDate)}
+SUMMARY:Konten: ${item.platform} - ${item.idea}
+DESCRIPTION:Rencana Konten:\\n\\nIde: ${item.idea}\\nPlatform: ${item.platform}\\nPilar: ${item.pillar}\\n\\nBrief Caption:\\n${item.caption_brief}\\n\\nSaran Visual:\\n${item.visual_idea}\\n\\nHashtags:\\n${item.hashtags}
+LOCATION:${item.platform}
+END:VEVENT
+END:VCALENDAR`;
+            
+            const blob = new Blob([icsContent], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Konten_${item.platform}_${item.day.replace(/\s/g, '_')}.ics`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            calendarModal.classList.add('hidden');
+        };
+
+        closeCalendarModalBtn.addEventListener('click', () => calendarModal.classList.add('hidden'));
+        googleCalendarBtn.addEventListener('click', generateGoogleCalendarLink);
+        icsDownloadBtn.addEventListener('click', generateIcsFile);
+        
+        // --- NEW FEATURES ---
+        productFocusToggle.addEventListener('change', () => {
+            const isChecked = productFocusToggle.checked;
+            productFocusFields.classList.toggle('hidden', !isChecked);
+            planDetailsContainer.classList.toggle('hidden', isChecked);
+        });
+        
+        const setDefaultDate = () => {
+            const startDateInput = getEl('start-date');
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            if(!startDateInput.value){ startDateInput.value = `${year}-${month}-${day}`; }
+            startDateInput.min = `${year}-${month}-${day}`;
+            getEl('promotion-start-date').value = '';
+            getEl('promotion-end-date').value = '';
         };
 
         // --- FINAL SETUP AND INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            loginBtn.addEventListener('click', handleGoogleLogin);
-            logoutBtn.addEventListener('click', handleLogout);
-            saveToGoogleAccountBtn.addEventListener('click', handleGoogleLogin);
-            saveToBrowserBtn.addEventListener('click', async () => {
-                saveDraftChoiceModal.classList.add('hidden');
-                await handleSaveToDrafts(true);
-                pendingDraftData = null;
-            });
-            viewDraftsBtn.addEventListener('click', showDraftsModal);
-            closeDraftsModalBtn.addEventListener('click', () => draftsModal.classList.add('hidden'));
-            saveDraftBtn.addEventListener('click', handleSaveToDrafts);
-            
             document.querySelectorAll('.form-input').forEach(el => {
-                el.addEventListener('keyup', debouncedSaveFormData);
-                el.addEventListener('change', debouncedSaveFormData);
+                el.addEventListener('keyup', debouncedSave);
+                el.addEventListener('change', debouncedSave);
             });
-            
-            closeApiKeyModalBtn.addEventListener('click', () => apiKeyModal.classList.add('hidden'));
-            toggleApiKeyVisibilityBtn.addEventListener('click', () => {
-                const isPassword = apiKeyModalInput.type === 'password';
-                apiKeyModalInput.type = isPassword ? 'text' : 'password';
-                getEl('toggle-api-key-icon').classList.toggle('fa-eye', !isPassword);
-                getEl('toggle-api-key-icon').classList.toggle('fa-eye-slash', isPassword);
-            });
-
-            nextBtn.addEventListener('click', () => { if (currentStep < totalSteps) { currentStep++; showStep(currentStep); } });
-            prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; showStep(currentStep); } });
-            restartBtn.addEventListener('click', startOver);
-            resetBtn.addEventListener('click', resetForm);
-            exportCsvBtn.addEventListener('click', handleExportCSV);
-            exportPdfBtn.addEventListener('click', handleExportPDF);
-            closeErrorModalBtn.addEventListener('click', () => errorModal.classList.add('hidden'));
-            closeCaptionModalBtn.addEventListener('click', () => captionModal.classList.add('hidden'));
-            closeDraftAiResultModalBtn.addEventListener('click', () => draftAiResultModal.classList.add('hidden'));
-            productFocusToggle.addEventListener('change', () => {
-                const isChecked = productFocusToggle.checked;
-                productFocusFields.classList.toggle('hidden', !isChecked);
-                planDetailsContainer.classList.toggle('hidden', isChecked);
-            });
-
             initFirebase();
             showStep(1);
         });
