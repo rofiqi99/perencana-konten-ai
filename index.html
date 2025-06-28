@@ -470,16 +470,20 @@
                         const result = await signInWithPopup(auth, provider);
                         const user = result.user;
                         
-                        // After successful Google sign-in, merge local data to Firestore
                         if (user) {
                             const userDocRef = doc(db, `artifacts/${appId}/users/${user.uid}/contentPlanner`, "formData");
                             await setDoc(userDocRef, localAnonymousData, { merge: true });
-                            console.log("Local data merged to Firestore.");
+                            console.log("Local data successfully merged to your Google account.");
                         }
 
                     } catch(error) {
-                        console.error("Google Sign-In Error", error);
-                        showErrorModal(`Gagal login dengan Google: ${error.message}`);
+                         if (error.code === 'auth/unauthorized-domain') {
+                            console.log("Google Login Prevented: This domain is not authorized. To enable login, add this domain to the 'Authorized domains' list in your Firebase Console > Authentication > Settings.");
+                            showErrorModal("Login Google tidak diizinkan dari domain ini. Anda dapat melanjutkan tanpa login atau mengizinkan domain ini di pengaturan Firebase Anda.");
+                        } else {
+                            console.error("Google Sign-In Error", error);
+                            showErrorModal(`Gagal login dengan Google: ${error.message}`);
+                        }
                     }
                 });
 
@@ -509,13 +513,11 @@
                             await loadFromFirestore();
                         }
                     } else {
-                         // This case should ideally not happen if anonymous sign-in is the fallback.
                          isAuthReady = false;
-                         signInAnonymously(auth); // Re-authenticate as anonymous
+                         signInAnonymously(auth); 
                     }
                 });
                 
-                // Initial sign-in
                 if (!auth.currentUser) {
                     await signInAnonymously(auth);
                 }
@@ -578,7 +580,7 @@
                  const key = el.id || el.name;
                  if (data[key] !== undefined) {
                      if (el.type === 'checkbox') {
-                        if (Array.isArray(data[key])) { // For platform checkboxes
+                        if (Array.isArray(data[key])) { 
                             el.checked = data[key].includes(el.value);
                         } else {
                             el.checked = data[key];
@@ -594,7 +596,6 @@
                  }
              });
              
-             // Handle elements where name is used instead of id for grouping
              if(data['business-stage']) {
                  const stageRadio = document.querySelector(`input[name="business-stage"][value="${data['business-stage']}"]`);
                  if(stageRadio) stageRadio.checked = true;
@@ -623,7 +624,7 @@
         const draftCaptionContent = getEl('draft-caption-content');
         const copyDraftCaptionBtn = getEl('copy-draft-caption-btn');
 
-        const getDraftsKey = () => `contentPlannerDrafts_local`; // Always save drafts locally
+        const getDraftsKey = () => `contentPlannerDrafts_local`;
 
         const getDrafts = () => {
             return JSON.parse(localStorage.getItem(getDraftsKey())) || [];
@@ -687,7 +688,7 @@
         };
 
         const viewDraft = (draft) => {
-            currentDraftObject = draft; // Store the currently viewed draft object
+            currentDraftObject = draft; 
             if (draft.inputs) {
                 currentInputs = draft.inputs;
             }
@@ -828,13 +829,14 @@
                 if (error instanceof InvalidApiKeyError) {
                     showErrorModal(error.message);
                     apiKeyModal.classList.remove('hidden');
-                    resetToFormView();
                 } else {
                     showErrorModal(error.message);
+                }
+                // Always hide loading on error, but don't reset the view for invalid API keys
+                hideLoading();
+                if (!(error instanceof InvalidApiKeyError)) {
                     resetToFormView();
                 }
-            } finally {
-                hideLoading();
             }
         };
 
