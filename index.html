@@ -408,7 +408,14 @@
 
         // --- GLOBAL AND FIREBASE VARIABLES ---
         const getEl = (id) => document.getElementById(id);
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = {
+  apiKey: "AIzaSyCwpXE1nPbexPiV0JevbXrkUo5DvyYB-gg",
+  authDomain: "perencana-konten-ai-bf9db.firebaseapp.com",
+  projectId: "perencana-konten-ai-bf9db",
+  storageBucket: "perencana-konten-ai-bf9db.firebasestorage.app",
+  messagingSenderId: "10119160641",
+  appId: "1:10119160641:web:1a29b6c4f22843240477c0"
+};
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
         let app, db, auth;
