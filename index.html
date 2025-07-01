@@ -54,8 +54,6 @@
         .modal-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; line-height: 1.6; }
         .modal-content blockquote { border-left: 4px solid #cbd5e1; padding-left: 1rem; margin-left: 0; font-style: italic; color: #475569; }
         
-        #api-key-section { transition: all 0.5s ease-in-out; }
-        
         .card-loading-overlay {
             position: absolute;
             top: 0;
@@ -82,11 +80,10 @@
                  <button id="view-drafts-btn" class="bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm">
                     <i class="fas fa-folder-open mr-2"></i>Lihat Draf Lokal
                 </button>
-                <!-- Google Login & User Profile -->
                 <div id="auth-container">
                     <button id="google-login-btn" class="bg-white text-slate-700 font-semibold py-2 px-5 rounded-lg hover:bg-slate-50 transition-colors border border-slate-300 shadow-sm flex items-center gap-3">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google logo" class="w-5 h-5">
-                        Login untuk Sinkronisasi
+                        Login (Opsional)
                     </button>
                     <div id="user-profile" class="hidden flex items-center gap-3 bg-white border border-slate-200 rounded-full py-1 pr-3 pl-1 shadow-sm">
                         <img id="user-profile-img" class="w-9 h-9 rounded-full" alt="User profile picture">
@@ -237,7 +234,6 @@
                        </div>
                 </div>
 
-                <!-- Navigation Buttons -->
                 <div class="mt-10 pt-5 border-t border-slate-200 flex justify-between items-center max-w-xl mx-auto">
                     <div class="flex items-center gap-4">
                         <button id="prev-btn" class="bg-slate-200 text-slate-700 font-bold py-2 px-6 rounded-lg hover:bg-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Kembali</button>
@@ -253,10 +249,8 @@
                 </div>
             </div>
 
-            <!-- Loading Indicator -->
             <div id="loading" class="text-center py-16 hidden"><i class="fas fa-spinner fa-spin text-5xl text-blue-500"></i><p class="mt-4 text-xl font-semibold text-slate-800">AI sedang meracik rencana konten Anda...</p><p class="text-slate-500">Mohon tunggu, ini bisa memakan waktu hingga 1 menit.</p></div>
 
-            <!-- Results -->
             <div id="results" class="hidden">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <div><h2 id="results-title" class="text-3xl font-bold text-slate-900">Rencana Konten Anda</h2><p id="results-subtitle" class="text-slate-600">Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.</p></div>
@@ -271,8 +265,6 @@
             </div>
         </main>
         
-        <!-- MODALS -->
-        <!-- Drafts Modal -->
         <div id="drafts-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
             <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
@@ -280,13 +272,10 @@
                     <button id="close-drafts-modal" class="text-slate-500 hover:text-slate-800"><i class="fas fa-times fa-lg"></i></button>
                 </div>
                 <div class="p-6 overflow-y-auto flex-grow grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Drafts List -->
                     <div id="drafts-list-container" class="md:col-span-1 h-full overflow-y-auto pr-4 border-r border-slate-200">
                          <ul id="drafts-list" class="space-y-3">
-                             <!-- Draft items will be injected here -->
-                         </ul>
+                             </ul>
                     </div>
-                    <!-- Draft Content Viewer -->
                     <div id="draft-viewer" class="md:col-span-2 hidden">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 pb-2 border-b">
                             <h4 id="draft-viewer-title" class="text-xl font-bold text-slate-800">Detail Draf</h4>
@@ -296,14 +285,12 @@
                             </div>
                         </div>
                         <div id="draft-viewer-content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
-                            <!-- Selected draft content will be rendered here -->
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Draft AI Result Modal (child of Drafts Modal) -->
         <div id="draft-ai-result-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-[60]">
             <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col modal-content-bg">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
@@ -319,39 +306,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- API Key Modal -->
-        <div id="api-key-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 hidden z-50">
-            <div class="bg-white rounded-xl shadow-2xl p-6 md:p-8 max-w-md w-full">
-                <div class="flex items-start md:items-center gap-4 mb-4">
-                    <div class="w-10 h-10 md:w-12 md:h-12 flex-shrink-0 bg-blue-100 rounded-full flex items-center justify-center">
-                         <i class="fas fa-key text-blue-500 text-lg md:text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-slate-800 text-lg md:text-xl">Satu Langkah Lagi: Hubungkan AI Anda</h3>
-                        <p class="text-slate-600 text-sm">Masukkan kunci aktivasi gratis Anda untuk membuat rencana konten.</p>
-                    </div>
-                </div>
-                <div>
-                    <label for="api-key-modal-input" class="block text-sm font-medium text-slate-700 mb-1">Kunci Aktivasi (API Key)</label>
-                    <div class="relative">
-                        <input type="password" id="api-key-modal-input" placeholder="Tempel kunci Anda di sini" class="w-full px-4 py-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <button id="toggle-api-key-visibility" class="absolute inset-y-0 right-0 flex items-center px-3 text-slate-500 hover:text-slate-700">
-                            <i id="toggle-api-key-icon" class="fas fa-eye"></i>
-                        </button>
-                    </div>
-                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="block mt-2 text-xs text-blue-600 hover:underline">Belum punya? Dapatkan gratis di sini <i class="fas fa-external-link-alt ml-1"></i></a>
-                     <div class="mt-4 p-3 bg-slate-100 rounded-lg text-xs text-slate-600">
-                         <p><i class="fas fa-shield-halved mr-1"></i>Kunci Anda aman dan disimpan di browser Anda. Login dengan Google untuk menyinkronkan antar perangkat.</p>
-                     </div>
-                </div>
-                <div class="flex gap-3 mt-6">
-                     <button id="close-api-key-modal-btn" class="w-full bg-slate-200 text-slate-700 font-bold py-2 px-4 rounded-lg hover:bg-slate-300 transition-colors">Nanti Saja</button>
-                     <button id="save-api-key-modal-btn" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">Aktifkan AI & Buat Rencana</button>
-                </div>
-            </div>
-        </div>
-
+        
         <div id="error-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
             <div class="bg-white rounded-lg shadow-xl p-8 max-w-sm w-full text-center">
                 <div class="text-red-500 mx-auto w-16 h-16 flex items-center justify-center bg-red-100 rounded-full">
@@ -363,7 +318,6 @@
             </div>
         </div>
         
-        <!-- Main Caption Modal -->
         <div id="caption-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 hidden z-40">
             <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col modal-content-bg">
                 <div class="p-4 border-b border-slate-200 flex justify-between items-center">
@@ -380,7 +334,6 @@
             </div>
         </div>
 
-        <!-- Add to Calendar Modal -->
         <div id="calendar-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-[60]">
             <div class="bg-white rounded-xl shadow-2xl p-6 max-w-sm w-full text-center">
                 <h3 class="text-xl font-semibold text-slate-900 mb-4">Tambahkan ke Kalender</h3>
@@ -399,32 +352,24 @@
 
 
     </div>
-
+    
     <script type="module">
-        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- GLOBAL AND FIREBASE VARIABLES ---
         const getEl = (id) => document.getElementById(id);
-        const firebaseConfig = {
-  apiKey: "AIzaSyCwpXE1nPbexPiV0JevbXrkUo5DvyYB-gg",
-  authDomain: "perencana-konten-ai-bf9db.firebaseapp.com",
-  projectId: "perencana-konten-ai-bf9db",
-  storageBucket: "perencana-konten-ai-bf9db.firebasestorage.app",
-  messagingSenderId: "10119160641",
-  appId: "1:10119160641:web:1a29b6c4f22843240477c0"
-};
+        
+        const autoFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const firebaseConfig = Object.keys(autoFirebaseConfig).length > 0 ? autoFirebaseConfig : (window.firebaseConfig || {});
+
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         
         let app, db, auth;
         let userId = null;
-        let userApiKey = null;
         let docRef = null;
-        let isAuthReady = false;
-        let localData = {}; // Object to hold local form data
-
+        
         let currentStep = 1;
         const totalSteps = 3;
         let generatedData = [];
@@ -442,19 +387,8 @@
         };
         
         // --- DATA STORAGE LOGIC ---
-
-        // Gets data from local memory or Firestore based on auth state
-        const loadData = async () => {
-            if (auth.currentUser && !auth.currentUser.isAnonymous) {
-                await loadFromFirestore();
-            } else {
-                loadFromLocalStorage();
-            }
-        };
-
-        // Saves data to local memory or Firestore based on auth state
         const saveData = async () => {
-             if (auth.currentUser && !auth.currentUser.isAnonymous) {
+             if (auth && auth.currentUser && !auth.currentUser.isAnonymous) {
                 await saveToFirestore();
             } else {
                 saveToLocalStorage();
@@ -466,6 +400,13 @@
         // --- FIREBASE INITIALIZATION & AUTH ---
         const initFirebase = async () => {
             try {
+                if (Object.keys(firebaseConfig).length === 0) {
+                    console.log("Firebase config not found. Running in local-only mode.");
+                    getEl('auth-container').style.display = 'none';
+                    loadFromLocalStorage();
+                    return;
+                }
+                
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
@@ -473,20 +414,18 @@
 
                 getEl('google-login-btn').addEventListener('click', async () => {
                     try {
-                        const localAnonymousData = getFormInputs(true);
+                        const localData = getFormInputs();
                         const result = await signInWithPopup(auth, provider);
                         const user = result.user;
                         
                         if (user) {
-                            const userDocRef = doc(db, `artifacts/${appId}/users/${user.uid}/contentPlanner`, "formData");
-                            await setDoc(userDocRef, localAnonymousData, { merge: true });
-                            console.log("Local data successfully merged to your Google account.");
+                            const userDocRef = doc(db, `users/${user.uid}/data/formData`);
+                            await setDoc(userDocRef, localData, { merge: true });
                         }
 
                     } catch(error) {
                          if (error.code === 'auth/unauthorized-domain') {
-                            console.log("Google Login Prevented: This domain is not authorized. To enable login, add this domain to the 'Authorized domains' list in your Firebase Console > Authentication > Settings.");
-                            showErrorModal("Login Google tidak diizinkan dari domain ini. Anda dapat melanjutkan tanpa login atau mengizinkan domain ini di pengaturan Firebase Anda.");
+                            showErrorModal("Login Google tidak diizinkan dari domain ini. Silakan izinkan di Firebase Console Anda.");
                         } else {
                             console.error("Google Sign-In Error", error);
                             showErrorModal(`Gagal login dengan Google: ${error.message}`);
@@ -495,6 +434,7 @@
                 });
 
                 getEl('logout-btn').addEventListener('click', () => {
+                    saveToLocalStorage(); 
                     signOut(auth);
                 });
 
@@ -504,15 +444,14 @@
                     
                     if (user) {
                         userId = user.uid;
-                        isAuthReady = true;
 
                         if (user.isAnonymous) {
                             userProfileEl.classList.add('hidden');
                             googleLoginBtnEl.classList.remove('hidden');
-                            docRef = null; // No firestore doc for anonymous users
+                            docRef = null; 
                             loadFromLocalStorage();
                         } else {
-                            docRef = doc(db, `artifacts/${appId}/users/${userId}/contentPlanner`, "formData");
+                            docRef = doc(db, `users/${user.uid}/data/formData`);
                             getEl('user-profile-name').textContent = user.displayName;
                             getEl('user-profile-img').src = user.photoURL;
                             userProfileEl.classList.remove('hidden');
@@ -520,7 +459,6 @@
                             await loadFromFirestore();
                         }
                     } else {
-                         isAuthReady = false;
                          signInAnonymously(auth); 
                     }
                 });
@@ -529,10 +467,10 @@
                     await signInAnonymously(auth);
                 }
 
-
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                showErrorModal("Gagal menghubungkan ke layanan. Beberapa fitur mungkin tidak berfungsi.");
+                 getEl('auth-container').style.display = 'none';
+                 loadFromLocalStorage();
             }
         };
 
@@ -541,14 +479,12 @@
 
         const loadFromLocalStorage = () => {
             const data = JSON.parse(localStorage.getItem(getLocalStorageKey('formData'))) || {};
-            localData = data;
             populateForm(data);
-            userApiKey = data.geminiApiKey || null;
             if (!Object.keys(data).length) setDefaultDate();
         };
 
         const saveToLocalStorage = () => {
-            const dataToSave = getFormInputs(true);
+            const dataToSave = getFormInputs(); 
             localStorage.setItem(getLocalStorageKey('formData'), JSON.stringify(dataToSave));
             console.log("Form data saved to Local Storage.");
         };
@@ -560,7 +496,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     populateForm(data);
-                    userApiKey = data.geminiApiKey || null;
                 } else {
                     setDefaultDate();
                 }
@@ -572,7 +507,7 @@
 
         const saveToFirestore = async () => {
             if (!docRef) return;
-            const dataToSave = getFormInputs(true);
+            const dataToSave = getFormInputs();
             try {
                 await setDoc(docRef, dataToSave, { merge: true });
                 console.log("Form data saved to Firestore.");
@@ -580,8 +515,9 @@
                 console.error("Error saving data to Firestore:", error);
             }
         };
-
+        
         const populateForm = (data) => {
+             const productFocusToggle = getEl('product-focus-toggle');
              if (!data) return;
              document.querySelectorAll('.form-input').forEach(el => {
                  const key = el.id || el.name;
@@ -604,32 +540,17 @@
              });
              
              if(data['business-stage']) {
-                 const stageRadio = document.querySelector(`input[name="business-stage"][value="${data['business-stage']}"]`);
-                 if(stageRadio) stageRadio.checked = true;
+                const stageRadio = document.querySelector(`input[name="business-stage"][value="${data['business-stage']}"]`);
+                if (stageRadio) stageRadio.checked = true;
              }
              if(data['content-mood']) {
                  const moodRadio = document.querySelector(`input[name="content-mood"][value="${data['content-mood']}"]`);
                  if(moodRadio) moodRadio.checked = true;
              }
-             productFocusToggle.dispatchEvent(new Event('change'));
+             if (productFocusToggle) {
+                productFocusToggle.dispatchEvent(new Event('change'));
+             }
         };
-
-
-        // --- DRAFT (localStorage only) LOGIC ---
-        const saveDraftBtn = getEl('save-draft-btn');
-        const viewDraftsBtn = getEl('view-drafts-btn');
-        const draftsModal = getEl('drafts-modal');
-        const closeDraftsModalBtn = getEl('close-drafts-modal');
-        const draftsList = getEl('drafts-list');
-        const draftViewer = getEl('draft-viewer');
-        const draftViewerTitle = getEl('draft-viewer-title');
-        const draftViewerContent = getEl('draft-viewer-content');
-        
-        const draftAiResultModal = getEl('draft-ai-result-modal');
-        const closeDraftAiResultModalBtn = getEl('close-draft-ai-result-modal');
-        const draftCaptionLoading = getEl('draft-caption-loading');
-        const draftCaptionContent = getEl('draft-caption-content');
-        const copyDraftCaptionBtn = getEl('copy-draft-caption-btn');
 
         const getDraftsKey = () => `contentPlannerDrafts_local`;
 
@@ -641,6 +562,7 @@
             localStorage.setItem(getDraftsKey(), JSON.stringify(drafts));
         };
         
+        const saveDraftBtn = getEl('save-draft-btn');
         if(saveDraftBtn){
             saveDraftBtn.addEventListener('click', () => {
                 const drafts = getDrafts();
@@ -662,6 +584,8 @@
         
         const showDraftsModal = () => {
             const drafts = getDrafts();
+            const draftsList = getEl('drafts-list');
+            const draftViewer = getEl('draft-viewer');
             draftsList.innerHTML = ''; 
             draftViewer.classList.add('hidden');
 
@@ -691,7 +615,7 @@
                     draftsList.appendChild(li);
                 });
             }
-            draftsModal.classList.remove('hidden');
+            getEl('drafts-modal').classList.remove('hidden');
         };
 
         const viewDraft = (draft) => {
@@ -699,9 +623,9 @@
             if (draft.inputs) {
                 currentInputs = draft.inputs;
             }
-            draftViewerTitle.textContent = `Detail Draf: ${draft.businessName}`;
-            renderResults(draft.planData, draftViewerContent, draft);
-            draftViewer.classList.remove('hidden');
+            getEl('draft-viewer-title').textContent = `Detail Draf: ${draft.businessName}`;
+            renderResults(draft.planData, getEl('draft-viewer-content'), draft);
+            getEl('draft-viewer').classList.remove('hidden');
             
             getEl('export-draft-pdf-btn').onclick = () => {
                 handleExportPDF(draft.planData, `Draf - ${draft.businessName}`, `Disimpan pada ${new Date(draft.savedAt).toLocaleString('id-ID')}`);
@@ -719,52 +643,18 @@
              showDraftsModal();
         };
 
-        if(viewDraftsBtn) viewDraftsBtn.addEventListener('click', showDraftsModal);
-        if(closeDraftsModalBtn) closeDraftsModalBtn.addEventListener('click', () => {
-            draftsModal.classList.add('hidden');
+        getEl('view-drafts-btn').addEventListener('click', showDraftsModal);
+        getEl('close-drafts-modal').addEventListener('click', () => {
+            getEl('drafts-modal').classList.add('hidden');
             currentDraftObject = null;
         });
-        if(closeDraftAiResultModalBtn) closeDraftAiResultModalBtn.addEventListener('click', () => draftAiResultModal.classList.add('hidden'));
-
-
-        // UI Elements
-        const apiKeyModal = getEl('api-key-modal');
-        const apiKeyModalInput = getEl('api-key-modal-input');
-        const saveApiKeyModalBtn = getEl('save-api-key-modal-btn');
-        const closeApiKeyModalBtn = getEl('close-api-key-modal-btn');
-        const toggleApiKeyVisibilityBtn = getEl('toggle-api-key-visibility');
-        const toggleApiKeyIcon = getEl('toggle-api-key-icon');
-
-        const formWizard = getEl('form-wizard');
-        const loadingEl = getEl('loading');
-        const resultsEl = getEl('results');
-        const resultsGrid = getEl('results-grid');
-        const resultsTitle = getEl('results-title');
-        const resultsSubtitle = getEl('results-subtitle');
+        getEl('close-draft-ai-result-modal').addEventListener('click', () => getEl('draft-ai-result-modal').classList.add('hidden'));
 
         const prevBtn = getEl('prev-btn');
         const nextBtn = getEl('next-btn');
         const generateBtn = getEl('generate-btn');
         const resetBtn = getEl('reset-btn'); 
 
-        const exportPdfBtn = getEl('export-pdf-btn');
-        const exportCsvBtn = getEl('export-csv-btn');
-        const restartBtn = getEl('restart-btn');
-
-        const errorModal = getEl('error-modal');
-        const errorMessage = getEl('error-message');
-        const closeErrorModalBtn = getEl('close-error-modal');
-        const captionModal = getEl('caption-modal');
-        const closeCaptionModalBtn = getEl('close-caption-modal');
-        const captionLoading = getEl('caption-loading');
-        const captionContent = getEl('caption-content');
-        const copyCaptionBtn = getEl('copy-caption-btn');
-        
-        const productFocusToggle = getEl('product-focus-toggle');
-        const productFocusFields = getEl('product-focus-fields');
-        const planDetailsContainer = getEl('plan-details-container');
-        
-        // --- UI LOGIC ---
         const updateButtons = () => {
             prevBtn.disabled = currentStep === 1;
             if (currentStep === totalSteps) {
@@ -799,88 +689,53 @@
         prevBtn.addEventListener('click', () => { if (currentStep > 1) { currentStep--; showStep(currentStep); } });
 
         const showLoading = () => {
-            formWizard.classList.add('hidden');
-            loadingEl.classList.remove('hidden');
-            resultsEl.classList.add('hidden');
+            getEl('form-wizard').classList.add('hidden');
+            getEl('loading').classList.remove('hidden');
+            getEl('results').classList.add('hidden');
         };
 
         const hideLoading = () => {
-            loadingEl.classList.add('hidden');
+            getEl('loading').classList.add('hidden');
         };
         
-        // --- Core Application Logic ---
         const generatePlan = async () => {
             showLoading();
             try {
-                if(saveDraftBtn) {
-                    saveDraftBtn.disabled = false;
-                    saveDraftBtn.innerHTML = '<i class="fas fa-save mr-2"></i>Simpan ke Draf';
-                    saveDraftBtn.classList.remove('cursor-not-allowed', 'opacity-60');
+                const saveDraftBtnEl = getEl('save-draft-btn');
+                if(saveDraftBtnEl) {
+                    saveDraftBtnEl.disabled = false;
+                    saveDraftBtnEl.innerHTML = '<i class="fas fa-save mr-2"></i>Simpan ke Draf';
+                    saveDraftBtnEl.classList.remove('cursor-not-allowed', 'opacity-60');
                 }
 
                 currentInputs = getFormInputs();
                 const prompt = buildPlannerPrompt(currentInputs);
-                const result = await callGemini(prompt, true, userApiKey, plannerSchema);
+                const result = await callGemini(prompt, true, plannerSchema);
                 generatedData = result.plan || [];
                 
                 const businessName = getEl('business-name').value;
-                resultsTitle.textContent = currentInputs.isProductFocus ? `Ide Fokus untuk "${currentInputs.productName}"` : `Rencana Konten untuk "${businessName}"`;
-                resultsSubtitle.textContent = currentInputs.isProductFocus ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
+                getEl('results-title').textContent = currentInputs['product-focus-toggle'] ? `Ide Fokus untuk "${currentInputs['product-focus-input']}"` : `Rencana Konten untuk "${businessName}"`;
+                getEl('results-subtitle').textContent = currentInputs['product-focus-toggle'] ? "Berikut adalah 5 ide yang dihasilkan khusus untuk produk ini." : "Berikut adalah ide-ide yang dihasilkan khusus untuk Anda.";
                 
-                renderResults(generatedData, resultsGrid);
-                resultsEl.classList.remove('hidden');
-                if(saveDraftBtn) saveDraftBtn.classList.remove('hidden');
-                formWizard.classList.add('hidden');
+                renderResults(generatedData, getEl('results-grid'));
+                getEl('results').classList.remove('hidden');
+                if(saveDraftBtnEl) saveDraftBtnEl.classList.remove('hidden');
+                getEl('form-wizard').classList.add('hidden');
             } catch (error) {
                 console.error('Error generating content:', error);
-                if (error instanceof InvalidApiKeyError) {
-                    showErrorModal(error.message);
-                    apiKeyModal.classList.remove('hidden');
-                } else {
-                    showErrorModal(error.message);
-                }
-                // Always hide loading on error, but don't reset the view for invalid API keys
+                showErrorModal(error.message || "Terjadi kesalahan saat membuat rencana.");
+                resetToFormView();
+            } finally {
                 hideLoading();
-                if (!(error instanceof InvalidApiKeyError)) {
-                    resetToFormView();
-                }
             }
         };
 
         generateBtn.addEventListener('click', async () => {
-            if (userApiKey) {
-                generatePlan();
-            } else {
-                apiKeyModal.classList.remove('hidden');
-            }
-        });
-
-        saveApiKeyModalBtn.addEventListener('click', () => {
-            const inputKey = apiKeyModalInput.value.trim();
-            if (!inputKey) {
-                showErrorModal("Mohon masukkan API Key Anda.");
-                return;
-            }
-            userApiKey = inputKey;
-            apiKeyModal.classList.add('hidden');
-            saveData().then(() => {
-                 generatePlan();
-            });
+            generatePlan();
         });
         
-        closeApiKeyModalBtn.addEventListener('click', () => {
-            apiKeyModal.classList.add('hidden');
-        });
-
-        toggleApiKeyVisibilityBtn.addEventListener('click', () => {
-            const isPassword = apiKeyModalInput.type === 'password';
-            apiKeyModalInput.type = isPassword ? 'text' : 'password';
-            toggleApiKeyIcon.classList.toggle('fa-eye', !isPassword);
-            toggleApiKeyIcon.classList.toggle('fa-eye-slash', isPassword);
-        });
-
         const resetForm = () => {
-            const form = formWizard;
+            const form = getEl('form-wizard');
             const fieldsToClear = [
                 'business-name', 'industry', 'description', 
                 'audience-age-from', 'audience-age-to', 'audience-interests',
@@ -897,9 +752,9 @@
             form.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                 checkbox.checked = (checkbox.id === 'platform-instagram' || checkbox.id === 'platform-tiktok');
             });
-            productFocusToggle.checked = false;
-            productFocusFields.classList.add('hidden');
-            planDetailsContainer.classList.remove('hidden');
+            getEl('product-focus-toggle').checked = false;
+            getEl('product-focus-fields').classList.add('hidden');
+            getEl('plan-details-container').classList.remove('hidden');
             form.querySelectorAll('input[type="radio"]').forEach(radio => {
                 radio.checked = (radio.id === 'stage-awareness' || radio.id === 'mood-informative');
             });
@@ -912,59 +767,42 @@
         };
 
         resetBtn.addEventListener('click', resetForm);
-        
-        class InvalidApiKeyError extends Error {
-            constructor(message) {
-                super(message);
-                this.name = 'InvalidApiKeyError';
-            }
-        }
 
         const plannerSchema = { type: "OBJECT", properties: { plan: { type: "ARRAY", items: { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] } } } };
         const singleIdeaSchema = { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] };
 
-        const callGemini = async (prompt, isJson = false, apiKey, schema = null) => {
-            if (!apiKey) {
-                throw new Error("Kunci API tidak ditemukan. Silakan masukkan kunci Anda.");
+        const callGemini = async (prompt, isJson = false, schema = null) => {
+            const vercelFunctionUrl = "https://aplikasi-konten-f46743gow-ikhsans-projects-127e330c.vercel.app"; 
+
+            if (vercelFunctionUrl.includes("NAMA-PROYEK-ANDA")) {
+                throw new Error("URL Vercel belum diatur. Silakan perbarui URL di dalam file index.html.");
             }
 
-            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = { contents: chatHistory };
-            
-            if (isJson && schema) {
-                payload.generationConfig = {
-                    responseMimeType: "application/json",
-                    responseSchema: schema
-                };
-            }
-            
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+            try {
+                const response = await fetch(vercelFunctionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt, isJson, schema })
+                });
 
-            if (!response.ok) {
-                 const errorBody = await response.json().catch(() => response.text());
-                if (response.status === 400 || response.status === 403 || (errorBody.error && errorBody.error.message.toLowerCase().includes('api key not valid'))) {
-                    userApiKey = null;
-                    await saveData();
-                    throw new InvalidApiKeyError(`Kunci API tidak valid atau izin ditolak. Kunci yang salah telah dihapus, silakan coba lagi dengan kunci yang benar.`);
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ error: `Server error: ${response.statusText}` }));
+                    throw new Error(errorData.error || `Server error: ${response.status}`);
                 }
-                throw new Error(`API error: ${response.status} ${response.statusText}. Body: ${JSON.stringify(errorBody)}`);
+                
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                return data.result;
+            } catch (error) {
+                console.error("Error calling Vercel function:", error);
+                throw new Error(error.message || "Gagal menghubungi layanan AI. Pastikan URL Vercel Anda benar dan server berjalan.");
             }
-            const result = await response.json();
-            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
-                 const text = result.candidates[0].content.parts[0].text;
-                 return JSON.parse(text);
-            }
-            throw new Error("Struktur respons dari AI tidak valid atau kosong.");
         };
 
-        const getFormInputs = (includeApiKey = false) => {
-            const isProductFocus = productFocusToggle.checked;
+        const getFormInputs = () => {
+            const isProductFocus = getEl('product-focus-toggle').checked;
             
             const platforms = Array.from(document.querySelectorAll('.platform-checkbox:checked')).map(el => el.value);
             const contentMood = document.querySelector('input[name="content-mood"]:checked');
@@ -997,34 +835,10 @@
                 'promotion-start-date': getEl('promotion-start-date').value,
                 'promotion-end-date': getEl('promotion-end-date').value,
             };
+            
+            allInputs.audience = audience;
 
-            if (includeApiKey) {
-                allInputs.geminiApiKey = userApiKey;
-            }
-
-            const promptInputs = {
-                 isProductFocus: isProductFocus,
-                 audience: audience,
-                 contentMood: allInputs['content-mood'],
-                 businessStage: allInputs['business-stage'],
-                 platforms: allInputs.platforms,
-            }
-
-            if (isProductFocus) {
-                promptInputs.productName = allInputs['product-focus-input'];
-                promptInputs.productDescription = allInputs['product-description'];
-            } else {
-                promptInputs.businessName = allInputs['business-name'];
-                promptInputs.industry = allInputs['industry'];
-                promptInputs.description = allInputs['description'];
-                promptInputs.startDate = allInputs['start-date'];
-                promptInputs.duration = allInputs['duration'];
-                promptInputs.promoDetails = allInputs['promotion-details'];
-                promptInputs.promoStart = allInputs['promotion-start-date'];
-                promptInputs.promoEnd = allInputs['promotion-end-date'];
-            }
-
-            return includeApiKey ? allInputs : promptInputs;
+            return allInputs;
         };
         
         const buildPlannerPrompt = (inputs) => {
@@ -1032,7 +846,7 @@
             const platformList = inputs.platforms.join(', ');
 
             let stageInstruction = '';
-            switch (inputs.businessStage) {
+            switch (inputs['business-stage']) {
                 case "Kesadaran":
                     stageInstruction = "Fokus utama adalah menjangkau audiens baru dan membangun brand awareness. Buat konten yang memperkenalkan brand, menjelaskan masalah yang produk Anda selesaikan, dan konten edukatif atau hiburan yang ringan untuk menarik perhatian.";
                     break;
@@ -1046,27 +860,27 @@
 
             const platformInstruction = `Setiap ide dalam rencana harus secara spesifik ditujukan untuk SALAH SATU platform dari daftar yang dipilih: ${platformList}. Alokasikan ide ke platform yang paling sesuai. Contoh: Ide video singkat untuk TikTok/Instagram Reels, ide gambar berkualitas tinggi atau carousel untuk Instagram, ide berbasis komunitas/teks untuk Facebook. Jangan membuat ide umum, tapi buatlah ide yang dioptimalkan untuk format setiap platform.`;
 
-            if (inputs.isProductFocus) {
-                return `Buat 5 ide konten yang berbeda dan kreatif untuk mempromosikan satu produk spesifik: "${inputs.productName}".
-                Deskripsi produk: "${inputs.productDescription}".
+            if (inputs['product-focus-toggle']) {
+                return `Buat 5 ide konten yang berbeda dan kreatif untuk mempromosikan satu produk spesifik: "${inputs['product-focus-input']}".
+                Deskripsi produk: "${inputs['product-description']}".
                 Target audiens: "${audienceDescription}".
-                Pembawaan suasana: "${inputs.contentMood}".
-                Tujuan Konten: "${inputs.businessStage}".
+                Pembawaan suasana: "${inputs['content-mood']}".
+                Tujuan Konten: "${inputs['business-stage']}".
                 INSTRUKSI PLATFORM: ${platformInstruction}
                 INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
                 Berikan ide dari berbagai sudut pandang (edukasi, testimoni, promosi, interaksi, dll) yang sesuai dengan tujuan konten tersebut. Hasilkan dalam format JSON dengan skema 'plan', gunakan "Ide 1", "Ide 2", dst. untuk field 'day'.`;
             }
 
             let focusInstruction = "Berikan kombinasi pilar konten yang seimbang (Edukasi, Promosi, Hiburan, Interaksi) yang sesuai dengan tujuan konten.";
-            if (inputs.promoDetails && inputs.promoStart && inputs.promoEnd) {
-                focusInstruction = `Ada promosi khusus yang sedang berjalan: "${inputs.promoDetails}" dari tanggal ${inputs.promoStart} hingga ${inputs.promoEnd}. Prioritaskan beberapa ide konten untuk promosi ini, sambil tetap menjaga keseimbangan pilar konten.`;
+            if (inputs['promotion-details'] && inputs['promotion-start-date'] && inputs['promotion-end-date']) {
+                focusInstruction = `Ada promosi khusus yang sedang berjalan: "${inputs['promotion-details']}" dari tanggal ${inputs['promotion-start-date']} hingga ${inputs['promotion-end-date']}. Prioritaskan beberapa ide konten untuk promosi ini, sambil tetap menjaga keseimbangan pilar konten.`;
             }
             
-            const moodInstruction = `Gunakan pembawaan suasana yang ${inputs.contentMood} dalam semua ide dan draf caption.`;
-            const startDateInstruction = inputs.startDate ? `Mulai rencana pada tanggal ${inputs.startDate}.` : '';
+            const moodInstruction = `Gunakan pembawaan suasana yang ${inputs['content-mood']} dalam semua ide dan draf caption.`;
+            const startDateInstruction = inputs['start-date'] ? `Mulai rencana pada tanggal ${inputs['start-date']}.` : '';
 
-            return `Anda adalah ahli strategi sosial media. Buat rencana konten untuk ${inputs.duration} hari untuk bisnis: Nama: "${inputs.businessName}", Industri: "${inputs.industry}", Deskripsi: "${inputs.description}", Audiens: "${audienceDescription}".
-            INSTRUKSI UTAMA: Rencana harus disesuaikan untuk mencapai tujuan **${inputs.businessStage}**.
+            return `Anda adalah ahli strategi sosial media. Buat rencana konten untuk ${inputs['duration']} hari untuk bisnis: Nama: "${inputs['business-name']}", Industri: "${inputs['industry']}", Deskripsi: "${inputs['description']}", Audiens: "${audienceDescription}".
+            INSTRUKSI UTAMA: Rencana harus disesuaikan untuk mencapai tujuan **${inputs['business-stage']}**.
             INSTRUKSI PLATFORM: ${platformInstruction}
             INSTRUKSI TUJUAN KONTEN: ${stageInstruction}
             INSTRUKSI TANGGAL: ${startDateInstruction} Gunakan tanggal kalender aktual (misalnya, '25 Juni 2025') untuk field 'day' dalam JSON, bukan 'Hari 1'.
@@ -1122,7 +936,7 @@
                 `;
                 card.querySelector('.get-ai-result-btn').addEventListener('click', () => handleDevelopCaption(item, draft));
                 card.querySelector('.add-to-calendar-btn').addEventListener('click', () => showCalendarModal(item));
-                card.querySelector('.regenerate-idea-btn').addEventListener('click', (e) => handleRegenerateIdea(index, e.currentTarget.closest('.bg-white'), container, draft));
+                card.querySelector('.regenerate-idea-btn').addEventListener('click', (e) => handleRegenerateIdea(index, e.currentTarget, container, draft));
                 container.appendChild(card);
             });
         };
@@ -1136,22 +950,23 @@
         };
 
         const buildRegeneratePrompt = (itemToReplace) => {
-            const contextInputs = currentInputs; // Use currentInputs which is set for main results or drafts
+            if (!currentInputs || !currentInputs.audience) {
+                console.error("Context for regeneration is missing.");
+                throw new Error("Konteks untuk membuat ulang ide tidak ditemukan.");
+            }
+            const contextInputs = currentInputs; 
             const audienceDescription = `Usia dari ${contextInputs.audience.age_from || 'tidak spesifik'} sampai ${contextInputs.audience.age_to || 'tidak spesifik'}, Jenis Kelamin ${contextInputs.audience.gender || 'semua'}, dengan minat pada ${contextInputs.audience.interests || 'tidak spesifik'}.`;
-            const baseInfo = contextInputs.isProductFocus 
-                ? `untuk produk "${contextInputs.productName}" (${contextInputs.productDescription})` 
-                : `untuk bisnis "${contextInputs.businessName}" di industri "${contextInputs.industry}"`;
+            const baseInfo = contextInputs['product-focus-toggle'] 
+                ? `untuk produk "${contextInputs['product-focus-input']}" (${contextInputs['product-description']})` 
+                : `untuk bisnis "${contextInputs['business-name']}" di industri "${contextInputs['industry']}"`;
 
             return `Anda adalah ahli strategi sosial media. Saya butuh satu ide konten BARU untuk menggantikan ide yang sudah ada.
-            
             Konteks Bisnis: ${baseInfo}
             Target Audiens: ${audienceDescription}
-            Tujuan Konten: ${contextInputs.businessStage}
-            Suasana Konten: ${contextInputs.contentMood}
+            Tujuan Konten: ${contextInputs['business-stage']}
+            Suasana Konten: ${contextInputs['content-mood']}
             Platform: ${itemToReplace.platform}
-
             Ide yang akan diganti adalah: "${itemToReplace.idea}" (Pilar: ${itemToReplace.pillar}).
-
             Tugas Anda:
             1. Buat satu ide konten yang SANGAT BERBEDA dari ide yang akan diganti.
             2. Ide baru harus tetap sesuai dengan semua konteks (audiens, tujuan, suasana, platform).
@@ -1159,10 +974,16 @@
             4. Hasilkan dalam format JSON tunggal (bukan dalam array 'plan'), sesuai dengan skema yang diberikan.`;
         }
 
-        const handleRegenerateIdea = async (index, cardElement, container, draft) => {
-            // Determine which data source to use
+        const handleRegenerateIdea = async (index, buttonElement, container, draft) => {
+            buttonElement.disabled = true;
+            
+            if (draft && draft.inputs) {
+                currentInputs = draft.inputs;
+            }
+
             let dataArray = draft ? draft.planData : generatedData;
             const itemToReplace = dataArray[index];
+            const cardElement = buttonElement.closest('.bg-white');
             
             const loadingOverlay = document.createElement('div');
             loadingOverlay.className = 'card-loading-overlay';
@@ -1171,12 +992,10 @@
 
             try {
                 const prompt = buildRegeneratePrompt(itemToReplace);
-                const newIdea = await callGemini(prompt, true, userApiKey, singleIdeaSchema);
+                const newIdea = await callGemini(prompt, true, singleIdeaSchema);
                 
-                // Replace the old item in the correct array
                 dataArray[index] = newIdea;
                 
-                // If it's a draft, update it in localStorage
                 if (draft) {
                     let drafts = getDrafts();
                     const draftIndex = drafts.findIndex(d => d.id === draft.id);
@@ -1185,22 +1004,26 @@
                         saveDrafts(drafts);
                     }
                 }
-
-                // Re-render the cards in the correct container
                 renderResults(dataArray, container, draft);
 
             } catch (error) {
                 console.error('Error regenerating idea:', error);
                 showErrorModal(error.message || "Gagal membuat ulang ide. Silakan coba lagi.");
-                cardElement.removeChild(loadingOverlay); // Ensure overlay is removed on error
+                cardElement.removeChild(loadingOverlay);
+            } finally {
+                buttonElement.disabled = false;
             }
         };
         
         const handleDevelopCaption = async (item, draft = null) => {
+            if (draft && draft.inputs) {
+                currentInputs = draft.inputs;
+            }
+
             const isDraftContext = draft !== null;
-            const modalToShow = isDraftContext ? getEl('draft-ai-result-modal') : captionModal;
-            const loadingToShow = isDraftContext ? getEl('draft-caption-loading') : captionLoading;
-            const contentToShow = isDraftContext ? getEl('draft-caption-content') : captionContent;
+            const modalToShow = isDraftContext ? getEl('draft-ai-result-modal') : getEl('caption-modal');
+            const loadingToShow = isDraftContext ? getEl('draft-caption-loading') : getEl('caption-loading');
+            const contentToShow = isDraftContext ? getEl('draft-caption-content') : getEl('caption-content');
             
             if (item.aiResultJson) {
                 contentToShow.innerHTML = renderAiResultFromJSON(item.aiResultJson);
@@ -1217,7 +1040,7 @@
             
             try {
                 const prompt = buildCaptionPrompt(item);
-                const resultJson = await callGemini(prompt, true, userApiKey, captionSchema);
+                const resultJson = await callGemini(prompt, true, captionSchema);
                 const htmlResult = renderAiResultFromJSON(resultJson);
                 contentToShow.innerHTML = htmlResult;
                 item.aiResultJson = resultJson;
@@ -1226,7 +1049,6 @@
                     const allDrafts = getDrafts();
                     const draftIndex = allDrafts.findIndex(d => d.id === draft.id);
                     if (draftIndex > -1) {
-                        // Find the specific item in the planData and update it
                         const itemIndex = allDrafts[draftIndex].planData.findIndex(p => p.idea === item.idea && p.day === item.day);
                         if(itemIndex > -1){
                             allDrafts[draftIndex].planData[itemIndex] = item;
@@ -1236,10 +1058,6 @@
                 }
             } catch (error) {
                 contentToShow.innerHTML = `<p class="text-red-500">${error.message}</p>`;
-                 if (error instanceof InvalidApiKeyError) {
-                    modalToShow.classList.add('hidden');
-                    apiKeyModal.classList.remove('hidden');
-                }
             } finally {
                 loadingToShow.classList.add('hidden');
                 contentToShow.classList.remove('hidden');
@@ -1258,20 +1076,24 @@
         const captionSchema = { type: "OBJECT", properties: { fullCaption: { type: "STRING" }, visualSuggestion: { type: "STRING" }, videoScript: { type: "ARRAY", items: { type: "STRING" } }, hashtags: { type: "ARRAY", items: { type: "STRING" } } }, required: ["fullCaption", "visualSuggestion", "videoScript", "hashtags"] };
 
         const buildCaptionPrompt = (item) => {
+            if (!currentInputs || !currentInputs.audience) {
+                console.error("Context for caption prompt is missing.");
+                throw new Error("Konteks untuk membuat caption tidak ditemukan.");
+            }
             const audienceDescription = `Usia ${currentInputs.audience.age_from || 'tidak spesifik'} - ${currentInputs.audience.age_to || 'tidak spesifik'} tahun, Jenis Kelamin: ${currentInputs.audience.gender}, Minat: ${currentInputs.audience.interests || 'tidak spesifik'}`;
             let promoInfo = "Tidak ada promosi khusus saat ini.";
-            if (currentInputs.promoDetails) {
-                promoInfo = `Saat ini ada promosi: "${currentInputs.promoDetails}".`;
+            if (currentInputs['promotion-details']) {
+                promoInfo = `Saat ini ada promosi: "${currentInputs['promotion-details']}".`;
             }
 
             return `Anda adalah seorang copywriter dan ahli strategi media sosial. Tugas Anda adalah mengembangkan brief konten berikut menjadi caption yang lengkap, menarik, dan siap untuk dipublikasikan.
 
 **Konteks Bisnis & Tujuan Utama:**
-- **Nama Bisnis:** ${currentInputs.businessName || 'Bisnis ini'}
+- **Nama Bisnis:** ${currentInputs['business-name'] || 'Bisnis ini'}
 - **Deskripsi Bisnis:** ${currentInputs.description || 'Tidak ada deskripsi.'}
 - **Target Audiens:** ${audienceDescription}
-- **Tujuan Utama Konten:** ${currentInputs.businessStage}. Ini berarti fokusnya adalah pada ${currentInputs.businessStage === 'Kesadaran' ? 'memperkenalkan brand dan menjangkau audiens baru.' : currentInputs.businessStage === 'Interaksi' ? 'membangun hubungan dan kepercayaan.' : 'mempertahankan pelanggan dan membangun komunitas.'}
-- **Pembawaan Suasana (Tone of Voice):** ${currentInputs.contentMood}
+- **Tujuan Utama Konten:** ${currentInputs['business-stage']}. Ini berarti fokusnya adalah pada ${currentInputs['business-stage'] === 'Kesadaran' ? 'memperkenalkan brand dan menjangkau audiens baru.' : currentInputs['business-stage'] === 'Interaksi' ? 'membangun hubungan dan kepercayaan.' : 'mempertahankan pelanggan dan membangun komunitas.'}
+- **Pembawaan Suasana (Tone of Voice):** ${currentInputs['content-mood']}
 
 **Informasi Promosi (Jika Ada):**
 - ${promoInfo}
@@ -1283,19 +1105,18 @@
 - **Ide Visual:** ${item.visual_idea}
 
 **Tugas Anda:**
-1.  **fullCaption:** Tulis caption lengkap dan menarik berdasarkan brief di atas. Gunakan ${currentInputs.contentMood} sebagai gaya bahasa. Akhiri dengan Call-To-Action (CTA) yang jelas dan sesuai dengan tujuan konten (${currentInputs.businessStage}). Jika ada promosi, sebutkan dengan jelas.
+1.  **fullCaption:** Tulis caption lengkap dan menarik berdasarkan brief di atas. Gunakan ${currentInputs['content-mood']} sebagai gaya bahasa. Akhiri dengan Call-To-Action (CTA) yang jelas dan sesuai dengan tujuan konten (${currentInputs['business-stage']}). Jika ada promosi, sebutkan dengan jelas.
 2.  **visualSuggestion:** Berikan deskripsi yang lebih detail untuk ide visual. Jelaskan elemen-elemen kunci yang harus ada, komposisi, atau nuansa visualnya.
 3.  **videoScript:** Jika ide visual adalah video (misal: Reels, TikTok), tuliskan skrip sederhana (maksimal 3-4 adegan/poin). Jika bukan video, kembalikan array kosong.
 4.  **hashtags:** Berikan daftar hashtag yang relevan, campurkan antara hashtag populer dan niche. Sertakan juga hashtag brand jika memungkinkan.
 
 Balas HANYA dengan objek JSON yang valid sesuai skema yang diberikan.`;
         };
-
         
-        closeCaptionModalBtn.addEventListener('click', () => captionModal.classList.add('hidden'));
+        getEl('close-caption-modal').addEventListener('click', () => getEl('caption-modal').classList.add('hidden'));
 
-        copyCaptionBtn.addEventListener('click', () => { copyTextFromModal(captionContent, copyCaptionBtn, "Salin Teks"); });
-        if (copyDraftCaptionBtn) { copyDraftCaptionBtn.addEventListener('click', () => { copyTextFromModal(draftCaptionContent, copyDraftCaptionBtn, "Salin Teks"); }); }
+        getEl('copy-caption-btn').addEventListener('click', () => { copyTextFromModal(getEl('caption-content'), getEl('copy-caption-btn'), "Salin Teks"); });
+        getEl('copy-draft-caption-btn').addEventListener('click', () => { copyTextFromModal(getEl('draft-caption-content'), getEl('copy-draft-caption-btn'), "Salin Teks"); });
 
         const copyTextFromModal = (contentElement, buttonElement, originalText) => {
             const textToCopy = contentElement.innerText;
@@ -1317,18 +1138,18 @@ Balas HANYA dengan objek JSON yang valid sesuai skema yang diberikan.`;
             }, 2000);
         };
 
-
         const showErrorModal = (message) => {
-            errorMessage.textContent = message || `Maaf, terjadi masalah. Silakan periksa koneksi Anda dan coba lagi.`;
-            errorModal.classList.remove('hidden');
+            getEl('error-message').textContent = message || `Maaf, terjadi masalah. Silakan periksa koneksi Anda dan coba lagi.`;
+            getEl('error-modal').classList.remove('hidden');
         };
-        closeErrorModalBtn.addEventListener('click', () => errorModal.classList.add('hidden'));
+        getEl('close-error-modal').addEventListener('click', () => getEl('error-modal').classList.add('hidden'));
 
         const resetToFormView = () => {
-            loadingEl.classList.add('hidden');
-            resultsEl.classList.add('hidden');
-             if(saveDraftBtn) saveDraftBtn.classList.add('hidden');
-            formWizard.classList.remove('hidden');
+            getEl('loading').classList.add('hidden');
+            getEl('results').classList.add('hidden');
+            const saveDraftBtnEl = getEl('save-draft-btn');
+            if(saveDraftBtnEl) saveDraftBtnEl.classList.add('hidden');
+            getEl('form-wizard').classList.remove('hidden');
         };
 
         const startOver = () => {
@@ -1336,9 +1157,8 @@ Balas HANYA dengan objek JSON yang valid sesuai skema yang diberikan.`;
             resetForm();
         };
 
-        restartBtn.addEventListener('click', startOver);
+        getEl('restart-btn').addEventListener('click', startOver);
         
-        // --- PDF & CSV EXPORT ---
         const handleExportPDF = (dataToExport, title, subtitle) => {
             if (!dataToExport || dataToExport.length === 0) {
                 showErrorModal("Tidak ada data untuk diekspor.");
@@ -1391,39 +1211,22 @@ Balas HANYA dengan objek JSON yang valid sesuai skema yang diberikan.`;
             document.body.removeChild(a);
         };
         
-        exportPdfBtn.addEventListener('click', () => handleExportPDF(generatedData, resultsTitle.textContent, resultsSubtitle.textContent));
-        exportCsvBtn.addEventListener('click', () => handleExportCSV(generatedData, resultsTitle.textContent));
+        getEl('export-pdf-btn').addEventListener('click', () => handleExportPDF(generatedData, getEl('results-title').textContent, getEl('results-subtitle').textContent));
+        getEl('export-csv-btn').addEventListener('click', () => handleExportCSV(generatedData, getEl('results-title').textContent));
         
-        // --- CALENDAR INTEGRATION LOGIC ---
-        const calendarModal = getEl('calendar-modal');
-        const closeCalendarModalBtn = getEl('close-calendar-modal');
-        const googleCalendarBtn = getEl('google-calendar-btn');
-        const icsDownloadBtn = getEl('ics-download-btn');
-        const monthMap = { "januari": 0, "februari": 1, "maret": 2, "april": 3, "mei": 4, "juni": 5, "juli": 6, "agustus": 7, "september": 8, "oktober": 9, "november": 10, "desember": 11 };
-        const parseDateString = (dateStr) => {
-            if (!dateStr || dateStr.toLowerCase().startsWith('ide')) return null;
-            const parts = dateStr.split(" ");
-            if (parts.length !== 3) return null;
-            const day = parseInt(parts[0], 10);
-            const month = monthMap[parts[1].toLowerCase()];
-            const year = parseInt(parts[2], 10);
-            if (isNaN(day) || month === undefined || isNaN(year)) return null;
-            return new Date(year, month, day, 9, 0, 0);
-        };
-        const formatToUTC = (date) => date ? date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') : '';
-        const showCalendarModal = (item) => { currentCalendarItem = item; calendarModal.classList.remove('hidden'); };
+        const showCalendarModal = (item) => { currentCalendarItem = item; getEl('calendar-modal').classList.remove('hidden'); };
         const generateGoogleCalendarLink = () => {
              if (!currentCalendarItem) return;
              const item = currentCalendarItem;
              const startDate = parseDateString(item.day);
              if (!startDate) { showErrorModal("Tanggal tidak valid."); return; }
-             const endDate = new Date(startDate.getTime() + 3600000); // 1 hour
+             const endDate = new Date(startDate.getTime() + 3600000); 
              const title = encodeURIComponent(`Konten: ${item.platform} - ${item.idea}`);
              const details = encodeURIComponent(`Rencana Konten:\n\nIde: ${item.idea}\nPlatform: ${item.platform}\nPilar: ${item.pillar}\n\nBrief Caption:\n${item.caption_brief}\n\nSaran Visual:\n${item.visual_idea}\n\nHashtags:\n${item.hashtags}`);
              const dates = `${formatToUTC(startDate)}/${formatToUTC(endDate)}`;
              const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${item.platform}`;
              window.open(url, '_blank');
-             calendarModal.classList.add('hidden');
+             getEl('calendar-modal').classList.add('hidden');
         };
         const generateIcsFile = () => {
             if (!currentCalendarItem) return;
@@ -1441,7 +1244,7 @@ DTSTAMP:${formatToUTC(new Date())}
 DTSTART:${formatToUTC(startDate)}
 DTEND:${formatToUTC(endDate)}
 SUMMARY:Konten: ${item.platform} - ${item.idea}
-DESCRIPTION:Rencana Konten:\\n\\nIde: ${item.idea}\\nPlatform: ${item.platform}\\nPilar: ${item.pillar}\\n\\nBrief Caption:\\n${item.caption_brief}\\n\\nSaran Visual:\\n${item.visual_idea}\\n\\nHashtags:\\n${item.hashtags}
+DESCRIPTION:Rencana Konten:\\n\\nIde: ${item.idea}\\nPlatform: ${item.platform}\\nPilar: ${item.pillar}\\n\nBrief Caption:\\n${item.caption_brief}\\n\\nSaran Visual:\\n${item.visual_idea}\\n\\nHashtags:\\n${item.hashtags}
 LOCATION:${item.platform}
 END:VEVENT
 END:VCALENDAR`;
@@ -1454,18 +1257,29 @@ END:VCALENDAR`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            calendarModal.classList.add('hidden');
+            getEl('calendar-modal').classList.add('hidden');
         };
+        const parseDateString = (dateStr) => {
+            const monthMap = { "januari": 0, "februari": 1, "maret": 2, "april": 3, "mei": 4, "juni": 5, "juli": 6, "agustus": 7, "september": 8, "oktober": 9, "november": 10, "desember": 11 };
+            if (!dateStr || dateStr.toLowerCase().startsWith('ide')) return null;
+            const parts = dateStr.split(" ");
+            if (parts.length !== 3) return null;
+            const day = parseInt(parts[0], 10);
+            const month = monthMap[parts[1].toLowerCase()];
+            const year = parseInt(parts[2], 10);
+            if (isNaN(day) || month === undefined || isNaN(year)) return null;
+            return new Date(year, month, day, 9, 0, 0);
+        };
+        const formatToUTC = (date) => date ? date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '') : '';
 
-        closeCalendarModalBtn.addEventListener('click', () => calendarModal.classList.add('hidden'));
-        googleCalendarBtn.addEventListener('click', generateGoogleCalendarLink);
-        icsDownloadBtn.addEventListener('click', generateIcsFile);
+        getEl('close-calendar-modal').addEventListener('click', () => getEl('calendar-modal').classList.add('hidden'));
+        getEl('google-calendar-btn').addEventListener('click', generateGoogleCalendarLink);
+        getEl('ics-download-btn').addEventListener('click', generateIcsFile);
         
-        // --- NEW FEATURES ---
-        productFocusToggle.addEventListener('change', () => {
-            const isChecked = productFocusToggle.checked;
-            productFocusFields.classList.toggle('hidden', !isChecked);
-            planDetailsContainer.classList.toggle('hidden', isChecked);
+        getEl('product-focus-toggle').addEventListener('change', () => {
+            const isChecked = getEl('product-focus-toggle').checked;
+            getEl('product-focus-fields').classList.toggle('hidden', !isChecked);
+            getEl('plan-details-container').classList.toggle('hidden', isChecked);
         });
         
         const setDefaultDate = () => {
@@ -1480,7 +1294,6 @@ END:VCALENDAR`;
             getEl('promotion-end-date').value = '';
         };
 
-        // --- FINAL SETUP AND INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.form-input').forEach(el => {
                 el.addEventListener('keyup', debouncedSave);
