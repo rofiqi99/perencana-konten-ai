@@ -782,7 +782,7 @@
         const singleIdeaSchema = { type: "OBJECT", properties: { day: { type: "STRING" }, platform: { type: "STRING" }, pillar: { type: "STRING" }, idea: { type: "STRING" }, caption_brief: { type: "STRING" }, visual_idea: { type: "STRING" }, hashtags: { type: "STRING" } }, required: ["day", "platform", "pillar", "idea", "caption_brief", "visual_idea", "hashtags"] };
 
         const callGemini = async (prompt, isJson = false, schema = null) => {
-            const vercelFunctionUrl = "https://aplikasi-konten-f46743gow-ikhsans-projects-127e330c.vercel.app"; 
+            const vercelFunctionUrl = "https://aplikasi-konten-f46743gow-ikhsans-projects-127e330c.vercel.app/api/generate"; 
 
             if (vercelFunctionUrl.includes("NAMA-PROYEK-ANDA")) {
                 throw new Error("URL Vercel belum diatur. Silakan perbarui URL di dalam file index.html.");
