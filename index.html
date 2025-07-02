@@ -361,11 +361,14 @@
         // --- GLOBAL AND FIREBASE VARIABLES ---
         const getEl = (id) => document.getElementById(id);
         
-        const autoFirebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const firebaseConfig = Object.keys(autoFirebaseConfig).length > 0 ? autoFirebaseConfig : (window.firebaseConfig || {});
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        
+        const firebaseConfig = {
+  apiKey: "AIzaSyBUIORdhVUINg68mXUbtRlLFWgtfRaxXcs",
+  authDomain: "aplikasi-konten-ai-final.firebaseapp.com",
+  projectId: "aplikasi-konten-ai-final",
+  storageBucket: "aplikasi-konten-ai-final.firebasestorage.app",
+  messagingSenderId: "989992152255",
+  appId: "1:989992152255:web:b94009b4771d7c95be6a0a"
+};        
         let app, db, auth;
         let userId = null;
         let docRef = null;
