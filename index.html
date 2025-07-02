@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Koneksi Vercel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4">Kirim Prompt ke AI</h1>
+        <textarea id="prompt-input" class="w-full p-2 border border-slate-300 rounded-md" rows="4" placeholder="Ketik prompt Anda di sini..."></textarea>
+        <button id="submit-btn" class="mt-4 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">Kirim</button>
+        <div id="loading" class="mt-4 text-center hidden">
+            <p>Memproses...</p>
+        </div>
+        <div id="result" class="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-md hidden">
+            <h3 class="font-bold">Hasil dari AI:</h3>
+            <pre id="result-text" class="whitespace-pre-wrap text-sm"></pre>
+        </div>
+        <div id="error" class="mt-4 p-4 bg-red-100 text-red-700 border border-red-200 rounded-md hidden"></div>
+    </div>
+
+    <script>
+        const submitBtn = document.getElementById('submit-btn');
+        const promptInput = document.getElementById('prompt-input');
+        const resultDiv = document.getElementById('result');
+        const resultText = document.getElementById('result-text');
+        const errorDiv = document.getElementById('error');
+        const loadingDiv = document.getElementById('loading');
+
+        // --- PENTING: GANTI URL INI SETELAH DEPLOYMENT PERTAMA ---
+        // Biarkan seperti ini dulu. Kita akan menggantinya nanti.
+        const vercelApiUrl = "https://proyek-konten-hk8b2uyev-ikhsans-projects-127e330c.vercel.app/api/generate";
+
+        submitBtn.addEventListener('click', async () => {
+            const prompt = promptInput.value;
+            if (!prompt) {
+                alert('Prompt tidak boleh kosong!');
+                return;
+            }
+
+            // Reset UI
+            resultDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            loadingDiv.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch(vercelApiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Cek struktur data dari server
+                if (data.result && data.result.candidates && data.result.candidates[0].content.parts[0].text) {
+                    resultText.textContent = data.result.candidates[0].content.parts[0].text;
+                    resultDiv.classList.remove('hidden');
+                } else {
+                     throw new Error("Struktur respons dari AI tidak terduga.");
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                errorDiv.textContent = `Terjadi Kesalahan: ${error.message}`;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                loadingDiv.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>
