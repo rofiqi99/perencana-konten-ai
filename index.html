@@ -416,25 +416,32 @@
                 const provider = new GoogleAuthProvider();
 
                 getEl('google-login-btn').addEventListener('click', async () => {
-                    try {
-                        const localData = getFormInputs();
-                        const result = await signInWithPopup(auth, provider);
-                        const user = result.user;
-                        
-                        if (user) {
-                            const userDocRef = doc(db, `users/${user.uid}/data/formData`);
-                            await setDoc(userDocRef, localData, { merge: true });
-                        }
+    try {
+        const localData = getFormInputs(); // Ambil data form sebelum login
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
 
-                    } catch(error) {
-                         if (error.code === 'auth/unauthorized-domain') {
-                            showErrorModal("Login Google tidak diizinkan dari domain ini. Silakan izinkan di Firebase Console Anda.");
-                        } else {
-                            console.error("Google Sign-In Error", error);
-                            showErrorModal(`Gagal login dengan Google: ${error.message}`);
-                        }
-                    }
-                });
+        // Jika login berhasil, gabungkan data lokal ke Firestore
+        if (user) {
+            const userDocRef = doc(db, `users/${user.uid}/data/formData`);
+            await setDoc(userDocRef, localData, { merge: true });
+        }
+
+    } catch (error) {
+        // PENANGANAN ERROR YANG LEBIH BAIK
+        if (error.code === 'auth/popup-closed-by-user') {
+            // Pengguna sengaja menutup pop-up. Tidak perlu melakukan apa-apa.
+            console.log("Proses login dibatalkan oleh pengguna.");
+        } else if (error.code === 'auth/unauthorized-domain') {
+            // Error karena domain tidak diizinkan
+            showErrorModal("Domain ini tidak diizinkan untuk login Google. Harap periksa konfigurasi Firebase Anda.");
+        } else {
+            // Untuk semua error lainnya, tampilkan pesan generik
+            console.error("Google Sign-In Error:", error);
+            showErrorModal(`Gagal login dengan Google. Silakan coba lagi.`);
+        }
+    }
+});
 
                 getEl('logout-btn').addEventListener('click', () => {
                     saveToLocalStorage(); 
